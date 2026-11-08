@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMS Protocol 溫習</title>
+<style>
+:root{
+  --bg:#f6f4f1; --card:#fff; --ink:#1d2228; --mute:#6b7280; --line:#e6e2dc;
+  --red:#c8102e; --red-soft:#fbe9ec; --green:#13795b; --green-soft:#e5f4ee;
+  --cyan:#0b6e8a; --cyan-soft:#e3f2f6; --warn:#a15c00; --warn-soft:#fdf1df;
+  --r:14px; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{--bg:#15181c;--card:#1e2227;--ink:#e9ecef;--mute:#9aa3ad;--line:#2d333a;
+  --red:#ff5a6e;--red-soft:#3a1d22;--green:#4cc79a;--green-soft:#173029;--cyan:#56c1dd;--cyan-soft:#16303a;--warn:#f0b05a;--warn-soft:#3a2c18;--shadow:none}
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+a{color:var(--cyan)}
+.wrap{max-width:820px;margin:0 auto;padding:16px 16px 96px}
+header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .in{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 16px}
+.logo{width:30px;height:30px;border-radius:8px;background:var(--red);display:grid;place-items:center;flex:none}
+.logo svg{width:18px;height:18px}
+header.top h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.2px}
+header.top .sub{font-size:12px;color:var(--mute)}
+.back{border:0;background:none;padding:6px 8px;margin-left:-8px;border-radius:8px;cursor:pointer;font-size:15px;color:var(--cyan)}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:6;background:var(--card);border-top:1px solid var(--line);
+  display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav.tabs button{flex:1;min-width:0;border:0;background:none;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;color:var(--mute);cursor:pointer;border-radius:10px}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button.on{color:var(--red);font-weight:600}
+.badge{display:inline-block;min-width:18px;padding:0 5px;border-radius:9px;background:var(--red);color:#fff;font-size:11px;line-height:18px;text-align:center}
+h2.title{font-size:22px;margin:6px 0 2px}
+.muted{color:var(--mute)}
+.small{font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:640px){.grid{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;text-align:left;cursor:pointer;box-shadow:var(--shadow)}
+.tile b{display:block;font-size:16px}
+.tile span{font-size:12.5px;color:var(--mute)}
+.tile .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;margin-bottom:8px}
+.tile .ic svg{width:20px;height:20px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 13px;font-size:14px;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;outline:none}
+.search:focus{border-color:var(--cyan)}
+.list{list-style:none;margin:0;padding:0}
+.list li{border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0}
+.row{display:flex;align-items:center;gap:12px;padding:12px 2px;cursor:pointer;width:100%;border:0;background:none;text-align:left}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-weight:600}
+.row .t span{font-size:13px;color:var(--mute)}
+.dot{width:8px;height:8px;border-radius:50%;flex:none}
+.cat-clinical{background:var(--red)} .cat-device{background:var(--cyan)} .cat-admin{background:var(--warn)} .cat-comms{background:var(--green)}
+.chev{color:var(--mute)}
+.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:600;cursor:pointer;background:var(--ink);color:var(--bg)}
+.btn.red{background:var(--red);color:#fff}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn.block{width:100%}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btns .btn{flex:1}
+select.sel{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+label.lb{display:block;font-size:13px;color:var(--mute);margin:12px 0 6px}
+/* protocol content */
+.ptabs{display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid var(--line);margin:10px -2px 0;padding:0 2px}
+.ptabs button{flex:none;border:0;background:none;padding:10px 12px;font-size:15px;color:var(--mute);cursor:pointer;border-bottom:2px solid transparent}
+.ptabs button.on{color:var(--ink);border-bottom-color:var(--red);font-weight:600}
+.pc{overflow-wrap:anywhere}
+.pc img{max-width:100%;height:auto;border-radius:8px;display:block;margin:8px 0}
+.pc .row,.pc .col,.pc div{display:block}
+.pc table{width:100%;border-collapse:collapse;margin:8px 0;font-size:14.5px}
+.pc td,.pc th{border-bottom:1px solid var(--line);padding:7px 6px;vertical-align:top;text-align:left}
+.pc h5{font-size:16px;margin:18px 0 8px;padding:8px 10px;border-radius:10px;background:var(--cyan-soft);color:var(--cyan)}
+.pc h1,.pc h2,.pc h3,.pc h4{font-size:16px;margin:14px 0 6px}
+.pc p{margin:6px 0}
+.pc ol,.pc ul{padding-left:22px;margin:6px 0}
+.pc li{margin:4px 0}
+.pc hr{border:0;border-top:1px dashed var(--line);margin:14px 0}
+.pc .c-red{color:var(--red)} .pc .c-green{color:var(--green)} .pc .c-cyan{color:var(--cyan)} .pc .c-warn{color:var(--warn)}
+.pc .b{font-weight:700}
+.pc .card-header{background:var(--cyan-soft);color:var(--cyan);padding:8px 10px;border-radius:10px;margin-top:14px}
+.pc .visually-hidden{display:none!important}
+.pc .tab-pane{display:none!important}
+.pc .tab-pane.active{display:block!important}
+.pc ul.nav-tabs{display:flex!important;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:10px 0}
+.pc ul.nav-tabs li{margin:0}
+.pc ul.nav-tabs a{display:inline-block;padding:7px 12px;border-radius:999px;border:1px solid var(--line);text-decoration:none;color:var(--ink);font-size:14px;background:var(--card);cursor:pointer}
+.pc ul.nav-tabs a.active{background:var(--red);border-color:var(--red);color:#fff}
+.src{font-size:12.5px;color:var(--mute);margin-top:14px}
+/* flashcard */
+.fc{perspective:1200px;margin:14px 0}
+.fc .inner{position:relative;min-height:300px;transition:transform .45s;transform-style:preserve-3d;cursor:pointer}
+.fc.flip .inner{transform:rotateY(180deg)}
+.fc .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px;overflow:auto}
+.fc .front{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.fc .front .k{font-size:13px;color:var(--mute)}
+.fc .front .h{font-size:21px;font-weight:700;margin:8px 0}
+.fc .back{transform:rotateY(180deg);color:var(--ink)}
+.fc .back pre{white-space:pre-wrap;font:inherit;margin:0}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;font-weight:600}
+.tag.ind{background:var(--green-soft);color:var(--green)}
+.tag.contra{background:var(--red-soft);color:var(--red)}
+.tag.info{background:var(--cyan-soft);color:var(--cyan)}
+.tag.mn,.tag.note{background:var(--warn-soft);color:var(--warn)}
+.tag.vocab{background:var(--cyan-soft);color:var(--cyan)}
+.prog{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:8px 0}
+.prog i{display:block;height:100%;background:var(--red);transition:width .3s}
+/* quiz */
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:13px 14px;margin:8px 0;cursor:pointer;font-size:15.5px}
+.opt:hover{border-color:var(--cyan)}
+.opt.right{border-color:var(--green);background:var(--green-soft)}
+.opt.wrong{border-color:var(--red);background:var(--red-soft)}
+.opt:disabled{cursor:default}
+.exp{border-radius:12px;padding:12px 14px;margin-top:10px;font-size:15px}
+.exp.ok{background:var(--green-soft)} .exp.no{background:var(--red-soft)}
+.exp b{display:block;margin-bottom:4px}
+.qhead{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mute)}
+.qtext{font-size:18px;font-weight:600;margin:10px 0 6px}
+.intro{background:var(--warn-soft);border-radius:12px;padding:12px 14px;font-size:15px}
+.big{font-size:44px;font-weight:800;margin:4px 0}
+.linkbtn{border:0;background:none;color:var(--cyan);cursor:pointer;padding:0;font-size:14px;text-decoration:underline}
+.empty{text-align:center;color:var(--mute);padding:30px 10px}
+.sync{font-size:12px;color:var(--mute)}
+.hid{background:var(--line);color:transparent;border-radius:6px;padding:0 4px}
+.hid.show{background:none;color:inherit}
+details summary::marker{color:var(--mute)}
+.pc th{background:var(--cyan-soft);font-weight:600}
+</style>
+</head>
+<body>
+<header class="top"><div class="in" id="hdr"></div></header>
+<main class="wrap" id="app"></main>
+<nav class="tabs" id="nav"></nav>
+
+<script src="data.js"></script>
+<script src="content.js"></script>
+<script src="glossary.js"></script>
+<script src="notes.js"></script>
+<script>
+(function(){
+'use strict';
+const P = window.PROTOCOLS || [];
+const C = window.CURATED || {contra:[],quiz:[],cases:[],mnemonics:[],notesQuiz:[]};
+const G = window.GLOSSARY || [], SENT = window.SENTENCES || [], N = window.NOTES || {chapters:[],removed:[]};
+const SPECIAL = {notes:{title:'參考筆記',zh:'EMA 筆記',view:'notes'}, vocab:{title:'英文詞彙',zh:'中英對照',view:'vocab'}};
+const titleOf = slug => (bySlug[slug]||SPECIAL[slug]||{}).title||'';
+const openRef = slug => SPECIAL[slug] ? go(SPECIAL[slug].view) : go('p-'+slug);
+const bySlug = Object.fromEntries(P.map(p=>[p.slug,p]));
+const CATS = {clinical:'臨床／藥物',device:'器材／程序',admin:'分流／行政',comms:'通訊及其他'};
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const ICON = {
+ book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/></svg>',
+ cards:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>',
+ quiz:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5h.01"/></svg>',
+ case:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>',
+ redo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>',
+ note:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h7"/></svg>',
+ abc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18l4-12 4 12M4.5 14h5"/><path d="M14 6h4a2.5 2.5 0 0 1 0 5h-4zM14 11h4.5a2.5 2.5 0 0 1 0 5H14z"/></svg>',
+ home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>',
+ star:'<svg viewBox="0 0 24 24" fill="#fff"><path d="M10 2h4v6.5l5.6-3.3 2 3.5L16 12l5.6 3.3-2 3.5L14 15.5V22h-4v-6.5l-5.6 3.3-2-3.5L8 12 2.4 8.7l2-3.5L10 8.5z"/></svg>'
+};
+
+/* ---------------- progress store ---------------- */
+const LS='emsrev.v1';
+let S = {wrong:{}, unknown:{}, stats:{answered:0,correct:0}, cases:{}, updatedAt:0};
+try{ const j=JSON.parse(localStorage.getItem(LS)||'null'); if(j) S=Object.assign(S,j); }catch(e){}
+let db=null, uid=null, saveT=null, saving=false, dirty=false, syncState='本機儲存';
+function save(){
+  S.updatedAt=Date.now();
+  try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}
+  dirty=true; clearTimeout(saveT); saveT=setTimeout(flush,1500);
+}
+async function flush(){
+  if(!db||!uid||saving||!dirty) return;
+  saving=true; dirty=false;
+  try{ await db.doc('data/users/'+uid+'/progress').set(JSON.parse(JSON.stringify(S))); syncState='已同步到你嘅帳戶'; }
+  catch(e){ syncState='本機儲存'; if(e&&e.code==='invalid_argument'){db=null} }
+  saving=false; if(dirty) flush();
+  const el=document.getElementById('sync'); if(el) el.textContent=syncState;
+}
+(async function initSync(){
+  try{
+    if(!window.claude||!window.claude.use) return;
+    const [d,u]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
+    if(!d||!u) return;
+    const id=await u.id(); if(!id) return;
+    db=d; uid=id;
+    const timer=setTimeout(()=>{},10000);
+    const snap=await db.doc('data/users/'+uid+'/progress').get();
+    clearTimeout(timer);
+    if(snap.exists){
+      const r=snap.data()||{};
+      if((r.updatedAt||0)>(S.updatedAt||0)){ S=Object.assign({wrong:{},unknown:{},stats:{answered:0,correct:0},cases:{}},JSON.parse(JSON.stringify(r))); try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){} route(); }
+      else if((S.updatedAt||0)>(r.updatedAt||0)){ dirty=true; flush(); }
+    } else if(S.updatedAt){ dirty=true; flush(); }
+    syncState='已同步到你嘅帳戶';
+    const el=document.getElementById('sync'); if(el) el.textContent=syncState;
+    renderNav();
+  }catch(e){}
+})();
+
+/* ---------------- question pool ---------------- */
+const TAGS=[['age',/歲|身高|磅|kg|嬰兒/],['allergy',/敏感|過敏/],['bp',/收縮壓|SBP|血壓|回流/],['preg',/懷孕|母乳|哺/],['lvad',/LVAD|左心室/],
+ ['arrest',/驟停|心搏停止/],['loc',/清醒|GCS|醉酒|發狂|不合作/],['airway',/呼吸道|氣道|會厭|異物|聲門|吞嚥|窒息|嘔吐|呼吸/],['eso',/食道|腐蝕/],['eye',/青光眼/],['bleed',/出血/],['hr',/心率|HR/],['time',/小時|星期|分鐘/],['drug',/藥|Benzodiazepines|Penthrox|ASA/],['chest',/胸部|胸腔/],['alc',/酒/]];
+const tagsOf=t=>new Set(TAGS.filter(([,r])=>r.test(t)).map(([k])=>k));
+function autoQuestions(){
+  const out=[];
+  C.contra.forEach(g=>{
+    const tgt=new Set(); g.items.forEach(i=>tagsOf(i).forEach(t=>tgt.add(t)));
+    const pool=[];
+    C.contra.forEach(o=>{ if(o.id===g.id) return; o.items.forEach(i=>{
+      const t=tagsOf(i); if(t.has('age')||t.has('allergy')) return;
+      for(const x of t) if(tgt.has(x)) return;
+      if(g.items.includes(i)) return; pool.push(i); }) });
+    const uniq=[...new Set(pool)];
+    if(uniq.length<3) return;
+    g.items.forEach((it,ix)=>{
+      out.push({id:'auto-'+g.id+'-'+ix, slug:g.slug, auto:true, q:'以下邊項係「'+g.name+'」嘅禁忌症？', correct:it, pool:uniq,
+        e:'「'+g.name+'」禁忌症：'+g.items.join('；')+'。'});
+    });
+  });
+  return out;
+}
+const AUTO=autoQuestions();
+const NQ=(C.notesQuiz||[]).map(q=>({...q,slug:'notes',src:'notes'}));
+function vocabQuestions(){
+  const out=[];
+  G.forEach(cat=>{ if(cat.items.length<4) return;
+    cat.items.forEach(([en,zh],i)=>{
+      const others=cat.items.filter((x,j)=>j!==i&&x[1]!==zh&&x[0]!==en);
+      out.push({id:'v-'+cat.id+'-'+i, slug:'vocab', src:'vocab', vocab:true, en, zh, cat:cat.name, others,
+        e:en+' ＝ '+zh+'（'+cat.name+'）'});
+    });
+  });
+  return out;
+}
+const VQ=vocabQuestions();
+const ALLQ=[...C.quiz.map(q=>({...q,src:'hand'})),...AUTO.map(q=>({...q,src:'auto'})),...NQ,...VQ];
+const QBYID=Object.fromEntries(ALLQ.map(q=>[q.id,q]));
+function materialize(q){
+  if(q.vocab){
+    const toZh=Math.random()<0.6, d=shuffle(q.others).slice(0,3);
+    return {...q, q: toZh?'「'+q.en+'」中文係？':'「'+q.zh+'」英文係？',
+      opts: shuffle([{t:toZh?q.zh:q.en,ok:true},...d.map(x=>({t:toZh?x[1]:x[0],ok:false}))])};
+  }
+  if(!q.auto){ const order=shuffle(q.o.map((t,i)=>({t,ok:i===q.a}))); return {...q,opts:order}; }
+  const d=shuffle(q.pool).slice(0,3);
+  return {...q,opts:shuffle([{t:q.correct,ok:true},...d.map(t=>({t,ok:false}))])};
+}
+
+/* ---------------- flashcards ---------------- */
+function buildCards(){
+  const cards=[];
+  P.forEach(p=>{
+    p.struct.forEach((s,i)=>cards.push({id:'s-'+p.slug+'-'+i,slug:p.slug,kind:s.kind,k:p.zh,h:s.name,html:s.html}));
+    p.sections.forEach((s,i)=>cards.push({id:'t-'+p.slug+'-'+i,slug:p.slug,kind:'info',k:p.title+' · '+s.tab,h:s.head,text:s.body}));
+  });
+  C.mnemonics.forEach((m,i)=>cards.push({id:'m-'+i,slug:m.slug,kind:'mn',k:'記憶口訣',h:m.head,text:m.body}));
+  N.chapters.forEach((ch,ci)=>ch.s.forEach((sec,si)=>{ if(sec.h==='說明')return;
+    cards.push({id:'n-'+ci+'-'+si,slug:'notes',kind:'note',src:'notes',k:ch.t,h:sec.h,text:sec.b.map(l=>l.replace(/^- /,'• ').replace(/^\|/,'').replace(/\|/g,' ｜ ')).join('\n')}) }));
+  G.forEach(cat=>cat.items.forEach(([en,zh],i)=>cards.push({id:'g-'+cat.id+'-'+i,slug:'vocab',kind:'vocab',src:'vocab',k:cat.name,h:en,text:zh,en,zh})));
+  cards.forEach(c=>{ if(!c.src) c.src='protocol'; });
+  return cards;
+}
+const CARDS=buildCards();
+const KINDLBL={ind:'適用症',contra:'禁忌症',info:'重點',mn:'口訣',note:'筆記',vocab:'詞彙'};
+
+/* ---------------- routing ---------------- */
+const VIEWS={home,browse,proto,cards,quiz,cases,review,notes,vocab};
+let state={};
+function go(h){ if(location.hash==='#'+h) route(); else location.hash=h; }
+window.addEventListener('hashchange',route);
+function route(){
+  const h=(location.hash||'#home').slice(1);
+  let v=h, arg=null;
+  if(h.startsWith('p-')){v='proto';arg=h.slice(2)}
+  if(!VIEWS[v]) v='home';
+  state.view=v; renderNav();
+  VIEWS[v](arg); window.scrollTo(0,0);
+}
+function header(title,sub,back){
+  $('#hdr').innerHTML=(back?'<button class="back" id="bk">‹ 返回</button>':'<div class="logo">'+ICON.star+'</div>')+
+   '<div><h1>'+esc(title)+'</h1>'+(sub?'<div class="sub">'+esc(sub)+'</div>':'')+'</div>';
+  if(back) $('#bk').onclick=()=>history.length>1?history.back():go('browse');
+}
+function renderNav(){
+  const w=Object.keys(S.wrong).filter(k=>QBYID[k]).length;
+  const items=[['home','主頁',ICON.home],['browse','查閱',ICON.book],['notes','筆記',ICON.note],['vocab','詞彙',ICON.abc],['cards','閃卡',ICON.cards],['quiz','測驗',ICON.quiz],['cases','個案',ICON.case]];
+  const cur=state.view==='proto'?'browse':state.view==='review'?'home':state.view;
+  $('#nav').innerHTML=items.map(([k,l,ic])=>'<button data-go="'+k+'" class="'+(cur===k?'on':'')+'">'+ic+'<span>'+l+(k==='home'&&w?' <span class="badge">'+w+'</span>':'')+'</span></button>').join('');
+  $('#nav').querySelectorAll('button').forEach(b=>b.onclick=()=>go(b.dataset.go));
+}
+
+/* ---------------- views ---------------- */
+function home(){
+  header('EMS Protocol 溫習','資料來源：ems.homes');
+  const acc=S.stats.answered?Math.round(S.stats.correct/S.stats.answered*100):null;
+  const w=Object.keys(S.wrong).filter(k=>QBYID[k]).length;
+  $('#app').innerHTML=
+   '<h2 class="title">今日溫邊樣？</h2><p class="muted small">'+P.length+' 個 Protocol · '+CARDS.length+' 張閃卡 · '+ALLQ.length+' 條題目 · '+C.cases.length+' 個模擬個案</p>'+
+   '<div class="grid">'+
+   tile('browse','查閱 Protocol','適用症、禁忌症、劑量、流程',ICON.book,'var(--cyan-soft)','var(--cyan)')+
+   tile('cards','閃卡','翻卡記憶',ICON.cards,'var(--green-soft)','var(--green)')+
+   tile('quiz','選擇題測驗','自動出題、計分',ICON.quiz,'var(--red-soft)','var(--red)')+
+   tile('cases','模擬個案','一步步做決定',ICON.case,'var(--warn-soft)','var(--warn)')+
+   tile('notes','參考筆記','EMA 筆記（已刪過時內容）',ICON.note,'var(--warn-soft)','var(--warn)')+
+   tile('vocab','英文對照','中英詞彙 '+G.reduce((a,c)=>a+c.items.length,0)+' 個',ICON.abc,'var(--cyan-soft)','var(--cyan)')+
+   tile('review','錯題','重做答錯嘅題目',ICON.redo,'var(--red-soft)','var(--red)')+
+   '</div>'+
+   '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>我嘅進度</b><span class="sync" id="sync">'+syncState+'</span></div>'+
+   '<p class="small" style="margin:8px 0 0">已答 '+S.stats.answered+' 題'+(acc!==null?' · 答啱率 '+acc+'%':'')+' · 錯題 '+w+' 條 · 未熟閃卡 '+Object.keys(S.unknown).length+' 張 · 完成個案 '+Object.keys(S.cases).length+'/'+C.cases.length+'</p>'+
+   (w?'<div class="btns" style="margin-top:12px"><button class="btn red" id="rw">重做錯題</button></div>':'')+'</div>'+
+   '<p class="muted small">所有內容整理自 <a href="https://ems.homes/ems/protocols.php" target="_blank">ems.homes</a>，只供溫習用；如有出入，以最新官方 Protocol 為準。</p>';
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+  const rw=$('#rw'); if(rw) rw.onclick=()=>{go('review')};
+}
+function tile(k,t,s,ic,bg,fg){return '<button class="tile" data-go="'+k+'"><div class="ic" style="background:'+bg+';color:'+fg+'">'+ic+'</div><b>'+t+'</b><span>'+s+'</span></button>'}
+
+let browseCat='all', browseQ='';
+function browse(){
+  header('查閱 Protocol',P.length+' 個');
+  $('#app').innerHTML='<input class="search" id="q" placeholder="搜尋（例如：Tramadol、低血糖、禁忌症字眼）" value="'+esc(browseQ)+'">'+
+   '<div class="chips" id="cats"></div><div class="card" style="padding:4px 14px"><ul class="list" id="lst"></ul></div>';
+  const cats=[['all','全部'],...Object.entries(CATS)];
+  $('#cats').innerHTML=cats.map(([k,l])=>'<button class="chip '+(browseCat===k?'on':'')+'" data-c="'+k+'">'+l+'</button>').join('');
+  $('#cats').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{browseCat=b.dataset.c;browse()});
+  const draw=()=>{
+    const q=browseQ.trim().toLowerCase();
+    const items=P.filter(p=>(browseCat==='all'||p.cat===browseCat)&&(!q||(p.title+' '+p.en+' '+p.zh).toLowerCase().includes(q)||(q.length>=2&&JSON.stringify(p.tabs).toLowerCase().includes(q))));
+    $('#lst').innerHTML=items.length?items.map(p=>'<li><button class="row" data-s="'+p.slug+'"><span class="dot cat-'+p.cat+'"></span><span class="t"><b>'+esc(p.title)+'</b><span>'+esc(p.zh)+' · '+CATS[p.cat]+'</span></span><span class="chev">›</span></button></li>').join(''):'<li class="empty">搵唔到</li>';
+    $('#lst').querySelectorAll('.row').forEach(b=>b.onclick=()=>go('p-'+b.dataset.s));
+  };
+  $('#q').oninput=e=>{browseQ=e.target.value;draw()};
+  draw();
+}
+
+function proto(slug){
+  const p=bySlug[slug]; if(!p){go('browse');return}
+  header(p.title,p.zh+' · '+CATS[p.cat],true);
+  const ti=state.ptab&&state.ptab.slug===slug?state.ptab.i:0;
+  const nq=ALLQ.filter(q=>q.slug===slug).length, nc=CARDS.filter(c=>c.slug===slug).length;
+  $('#app').innerHTML='<div class="small muted">'+p.meta.map(esc).join(' · ')+'</div>'+
+   '<div class="btns" style="margin-top:10px">'+(nc?'<button class="btn ghost" id="pc">閃卡 ('+nc+')</button>':'')+(nq?'<button class="btn ghost" id="pq">測驗 ('+nq+')</button>':'')+'</div>'+
+   '<div class="ptabs">'+p.tabs.map((t,i)=>'<button data-i="'+i+'" class="'+(i===ti?'on':'')+'">'+esc(t.name)+'</button>').join('')+'</div>'+
+   '<div class="pc" id="pcx">'+p.tabs[ti].html+'</div>'+
+   '<div class="src">原文：<a href="'+p.url+'" target="_blank">'+esc(p.url)+'</a></div>';
+  $('#app').querySelectorAll('.ptabs button').forEach(b=>b.onclick=()=>{state.ptab={slug,i:+b.dataset.i};proto(slug)});
+  const pc=$('#pc'); if(pc) pc.onclick=()=>{cardCfg={src:'protocol',scope:slug,kind:'all',only:false,dir:'en'};cardSession=null;go('cards')};
+  const pq=$('#pq'); if(pq) pq.onclick=()=>{quizCfg.scope=slug;quizCfg.src='all';quizSession=null;startQuiz()};
+  [...$('#pcx').children].forEach(el=>el.classList.add('active'));
+  wireTabs($('#pcx'));
+}
+function wireTabs(root){
+  root.querySelectorAll('a[data-tab]').forEach(a=>{
+    a.onclick=e=>{
+      e.preventDefault();
+      const ul=a.closest('ul'); if(ul) ul.querySelectorAll('a[data-tab]').forEach(x=>x.classList.remove('active'));
+      a.classList.add('active');
+      const pane=root.querySelector('[id="'+a.dataset.tab+'"]');
+      if(pane&&pane.parentElement){ [...pane.parentElement.children].forEach(c=>c.classList&&c.classList.contains('tab-pane')&&c.classList.remove('active')); pane.classList.add('active'); }
+    };
+  });
+  root.querySelectorAll('img').forEach(i=>i.onerror=()=>i.remove());
+}
+
+/* flashcards */
+let cardCfg={src:'protocol',scope:'all',kind:'all',only:false,dir:'en'}, cardSession=null;
+function scopeOptions(sel){
+  return '<option value="all">全部 Protocol</option>'+Object.entries(CATS).map(([k,l])=>'<option value="cat:'+k+'"'+(sel==='cat:'+k?' selected':'')+'>'+l+'（全部）</option>').join('')+
+   P.map(p=>'<option value="'+p.slug+'"'+(sel===p.slug?' selected':'')+'>'+esc(p.title)+'</option>').join('');
+}
+function inScope(slug,scope){ if(scope==='all')return true; if(scope.startsWith('cat:'))return (bySlug[slug]||{}).cat===scope.slice(4); return slug===scope; }
+function cards(){
+  header('閃卡','撳張卡翻轉');
+  if(cardSession) return showCard();
+  const opts=[['all','全部'],['ind','適用症'],['contra','禁忌症'],['info','重點'],['mn','口訣']];
+  const srcs=[['protocol','Protocol'],['notes','參考筆記'],['vocab','英文詞彙']];
+  let scopeHtml='';
+  if(cardCfg.src==='protocol') scopeHtml='<label class="lb">範圍</label><select class="sel" id="sc">'+scopeOptions(cardCfg.scope)+'</select>'+
+   '<label class="lb">類型</label><div class="chips" id="kd">'+opts.map(([k,l])=>'<button class="chip '+(cardCfg.kind===k?'on':'')+'" data-k="'+k+'">'+l+'</button>').join('')+'</div>';
+  else if(cardCfg.src==='notes') scopeHtml='<label class="lb">章節</label><select class="sel" id="sc"><option value="all">全部章節</option>'+N.chapters.map(c=>'<option value="'+esc(c.t)+'"'+(cardCfg.scope===c.t?' selected':'')+'>'+esc(c.t)+'</option>').join('')+'</select>';
+  else scopeHtml='<label class="lb">分類</label><select class="sel" id="sc"><option value="all">全部分類</option>'+G.map(c=>'<option value="'+esc(c.name)+'"'+(cardCfg.scope===c.name?' selected':'')+'>'+esc(c.name)+'</option>').join('')+'</select>'+
+   '<label class="lb">方向</label><div class="chips" id="dr">'+[['en','英文 → 中文'],['zh','中文 → 英文']].map(([k,l])=>'<button class="chip '+(cardCfg.dir===k?'on':'')+'" data-d="'+k+'">'+l+'</button>').join('')+'</div>';
+  $('#app').innerHTML='<div class="card"><label class="lb">來源</label><div class="chips" id="srcs">'+srcs.map(([k,l])=>'<button class="chip '+(cardCfg.src===k?'on':'')+'" data-s="'+k+'">'+l+'</button>').join('')+'</div>'+scopeHtml+
+   '<label class="lb"><input type="checkbox" id="on" '+(cardCfg.only?'checked':'')+'> 只溫未熟嘅卡（'+Object.keys(S.unknown).length+'）</label>'+
+   '<div class="muted small" id="cnt"></div><button class="btn red block" id="st" style="margin-top:12px">開始</button></div>';
+  const pick=()=>CARDS.filter(c=>c.src===cardCfg.src&&(!cardCfg.only||S.unknown[c.id])&&(
+    cardCfg.src==='protocol'?(inScope(c.slug,cardCfg.scope)&&(cardCfg.kind==='all'||c.kind===cardCfg.kind)):(cardCfg.scope==='all'||c.k===cardCfg.scope)));
+  const upd=()=>{$('#cnt').textContent='共 '+pick().length+' 張'};
+  $('#sc').onchange=e=>{cardCfg.scope=e.target.value;upd()};
+  $('#srcs').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{cardCfg.src=b.dataset.s;cardCfg.scope='all';cardCfg.kind='all';cards()});
+  const kd=$('#kd'); if(kd) kd.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{cardCfg.kind=b.dataset.k;cards()});
+  const dr=$('#dr'); if(dr) dr.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{cardCfg.dir=b.dataset.d;cards()});
+  $('#on').onchange=e=>{cardCfg.only=e.target.checked;upd()};
+  upd();
+  $('#st').onclick=()=>{const l=shuffle(pick()); if(!l.length)return; cardSession={list:l,i:0,known:0}; showCard()};
+}
+function showCard(){
+  const s=cardSession, c=s.list[s.i];
+  if(!c){ $('#app').innerHTML='<div class="card" style="text-align:center"><div class="big">完成！</div><p>識 '+s.known+' / '+s.list.length+' 張</p><div class="btns"><button class="btn ghost" id="ag">再嚟一次</button><button class="btn red" id="nw">揀第二套</button></div></div>';
+    $('#ag').onclick=()=>{cardSession={list:shuffle(s.list),i:0,known:0};showCard()}; $('#nw').onclick=()=>{cardSession=null;cards()}; return; }
+  const p={title:titleOf(c.slug)};
+  let front=c.h, back=c.html?'<div class="pc">'+c.html+'</div>':'<pre>'+esc(c.text)+'</pre>';
+  if(c.kind==='vocab'){ const z=cardCfg.dir==='zh'; front=z?c.zh:c.en; back='<div style="font-size:24px;font-weight:700;text-align:center;padding:30px 0">'+esc(z?c.en:c.zh)+'</div>'; }
+  $('#app').innerHTML='<div class="qhead"><span>'+(s.i+1)+' / '+s.list.length+'</span><button class="linkbtn" id="ex">結束</button></div><div class="prog"><i style="width:'+(s.i/s.list.length*100)+'%"></i></div>'+
+   '<div class="fc" id="fc"><div class="inner"><div class="face front"><span class="tag '+c.kind+'">'+KINDLBL[c.kind]+'</span><div class="h">'+esc(front)+'</div><div class="k">'+esc(c.k)+'</div><div class="muted small" style="margin-top:18px">撳一下睇答案</div></div>'+
+   '<div class="face back"><div class="small muted" style="margin-bottom:8px">'+esc(front)+' · '+KINDLBL[c.kind]+'</div>'+back+
+   '<div class="src"><button class="linkbtn" id="op">打開 '+esc(p.title||'')+'</button></div></div></div></div>'+
+   '<div class="btns"><button class="btn ghost" id="no">未熟</button><button class="btn red" id="yes">識</button></div>';
+  const fc=$('#fc'); fc.querySelector('.inner').onclick=e=>{ if(e.target.closest('a,button'))return; fc.classList.toggle('flip'); };
+  const sizeIt=()=>{const f=fc.querySelector(fc.classList.contains('flip')?'.back':'.front'); fc.querySelector('.inner').style.minHeight=Math.max(300,Math.min(f.scrollHeight,640))+'px'};
+  sizeIt(); fc.addEventListener('transitionend',sizeIt);
+  fc.querySelector('.inner').addEventListener('click',()=>setTimeout(sizeIt,10));
+  wireTabs(fc);
+  $('#op').onclick=()=>openRef(c.slug);
+  $('#ex').onclick=()=>{cardSession=null;cards()};
+  $('#no').onclick=()=>{S.unknown[c.id]=1;save();s.i++;showCard()};
+  $('#yes').onclick=()=>{if(S.unknown[c.id]){delete S.unknown[c.id];save()}s.known++;s.i++;showCard()};
+}
+
+/* quiz */
+let quizCfg={scope:'all',n:10,src:'all'}, quizSession=null;
+function quiz(){
+  header('選擇題測驗',ALLQ.length+' 條題目');
+  if(quizSession) return showQ();
+  $('#app').innerHTML='<div class="card"><label class="lb">範圍</label><select class="sel" id="sc">'+scopeOptions(quizCfg.scope)+'</select>'+
+   '<label class="lb">題型</label><div class="chips" id="tp">'+[['all','全部 Protocol'],['hand','劑量／準則'],['auto','禁忌症辨認'],['notes','參考筆記'],['vocab','英文詞彙']].map(([k,l])=>'<button class="chip '+(quizCfg.src===k?'on':'')+'" data-k="'+k+'">'+l+'</button>').join('')+'</div>'+
+   '<label class="lb">題數</label><div class="chips" id="nn">'+[10,20,30,0].map(n=>'<button class="chip '+(quizCfg.n===n?'on':'')+'" data-n="'+n+'">'+(n||'全部')+'</button>').join('')+'</div>'+
+   '<div class="muted small" id="cnt"></div><button class="btn red block" id="st" style="margin-top:12px">開始測驗</button></div>';
+  const upd=()=>{$('#cnt').textContent='符合範圍嘅題目：'+qpool().length+' 條'};
+  $('#sc').onchange=e=>{quizCfg.scope=e.target.value;upd()};
+  $('#tp').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{quizCfg.src=b.dataset.k;quiz()});
+  $('#nn').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{quizCfg.n=+b.dataset.n;quiz()});
+  upd(); $('#st').onclick=startQuiz;
+}
+function qpool(){
+  if(quizCfg.src==='notes'||quizCfg.src==='vocab') return ALLQ.filter(q=>q.src===quizCfg.src);
+  return ALLQ.filter(q=>(q.src==='hand'||q.src==='auto')&&inScope(q.slug,quizCfg.scope)&&(quizCfg.src==='all'||q.src===quizCfg.src));
+}
+function startQuiz(list,mode){
+  let l=Array.isArray(list)?list:shuffle(qpool());
+  if(!Array.isArray(list)&&quizCfg.n) l=l.slice(0,quizCfg.n);
+  if(!l.length){ if(location.hash!=='#quiz')go('quiz'); return; }
+  quizSession={list:l.map(materialize),i:0,score:0,answered:false,mode:mode||(Array.isArray(list)?'review':'quiz')};
+  if(location.hash!=='#quiz'&&quizSession.mode==='quiz') go('quiz'); else showQ();
+}
+function showQ(){
+  const s=quizSession,q=s.list[s.i];
+  if(state.view==='review') header('重做錯題','');
+  if(!q){
+    const pct=Math.round(s.score/s.list.length*100);
+    $('#app').innerHTML='<div class="card" style="text-align:center"><div class="muted">得分</div><div class="big">'+s.score+' / '+s.list.length+'</div><p>'+pct+'%'+(pct>=90?' · 好熟！':pct>=70?' · 唔錯':' · 再溫多次')+'</p>'+
+     '<div class="btns"><button class="btn ghost" id="ag">再做一份</button>'+(Object.keys(S.wrong).length?'<button class="btn red" id="rv">睇錯題</button>':'')+'</div></div>';
+    $('#ag').onclick=()=>{quizSession=null; s.mode==='review'?review():startQuiz()}; const rv=$('#rv'); if(rv) rv.onclick=()=>{quizSession=null;go('review')}; return;
+  }
+  const p={title:titleOf(q.slug)};
+  $('#app').innerHTML='<div class="qhead"><span>第 '+(s.i+1)+' / '+s.list.length+' 題 · '+esc(p.title||'')+'</span><button class="linkbtn" id="ex">結束</button></div><div class="prog"><i style="width:'+(s.i/s.list.length*100)+'%"></i></div>'+
+   '<div class="qtext">'+esc(q.q)+'</div><div id="opts">'+q.opts.map((o,i)=>'<button class="opt" data-i="'+i+'">'+esc(o.t)+'</button>').join('')+'</div><div id="fb"></div>';
+  $('#ex').onclick=()=>{quizSession=null; s.mode==='review'?review():quiz()};
+  $('#opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(s.answered)return; s.answered=true;
+    const o=q.opts[+b.dataset.i], ok=o.ok;
+    $('#opts').querySelectorAll('.opt').forEach((x,i)=>{x.disabled=true; if(q.opts[i].ok)x.classList.add('right')});
+    if(!ok) b.classList.add('wrong');
+    S.stats.answered++; if(ok){S.stats.correct++;s.score++; if(S.wrong[q.id])delete S.wrong[q.id];} else S.wrong[q.id]=Date.now();
+    save(); renderNav();
+    $('#fb').innerHTML='<div class="exp '+(ok?'ok':'no')+'"><b>'+(ok?'啱！':'唔啱')+'</b>'+esc(q.e)+'</div>'+
+     '<div class="btns" style="margin-top:12px"><button class="btn ghost" id="op">'+(SPECIAL[q.slug]?'睇'+SPECIAL[q.slug].title:'睇 Protocol')+'</button><button class="btn red" id="nx">'+(s.i+1<s.list.length?'下一題':'睇結果')+'</button></div>';
+    $('#op').onclick=()=>openRef(q.slug);
+    $('#nx').onclick=()=>{s.i++;s.answered=false;showQ()};
+  });
+}
+
+/* cases */
+let caseSession=null;
+function cases(){
+  header('模擬個案','分步決策，每步即時講解');
+  if(caseSession) return showCase();
+  $('#app').innerHTML='<div class="card" style="padding:4px 14px"><ul class="list">'+C.cases.map(c=>{
+    const b=S.cases[c.id];
+    return '<li><button class="row" data-id="'+c.id+'"><span class="dot cat-'+((bySlug[c.slug]||{}).cat||'clinical')+'"></span><span class="t"><b>'+esc(c.title)+'</b><span>'+c.steps.length+' 步'+(b!=null?' · 最佳 '+b+'/'+c.steps.length:'')+'</span></span><span class="chev">›</span></button></li>'}).join('')+'</ul></div>'+
+   '<p class="muted small">個案係根據 ems.homes Protocol 編寫嘅練習情境。</p>';
+  $('#app').querySelectorAll('.row').forEach(b=>b.onclick=()=>{caseSession={c:C.cases.find(x=>x.id===b.dataset.id),i:0,score:0,answered:false,log:[]};showCase()});
+}
+function showCase(){
+  const s=caseSession,c=s.c,st=c.steps[s.i];
+  if(!st){
+    const prev=S.cases[c.id]; if(prev==null||s.score>prev){S.cases[c.id]=s.score;save()}
+    $('#app').innerHTML='<div class="card" style="text-align:center"><div class="muted">'+esc(c.title)+'</div><div class="big">'+s.score+' / '+c.steps.length+'</div></div>'+
+     '<div class="card"><b>回顧</b>'+s.log.map((l,i)=>'<p class="small" style="margin:8px 0 0">'+(l.ok?'✅':'❌')+' 第 '+(i+1)+' 步：'+esc(c.steps[i].q)+'<br><span class="muted">答案：'+esc(c.steps[i].o[c.steps[i].a])+'</span></p>').join('')+'</div>'+
+     '<div class="btns"><button class="btn ghost" id="op">睇 Protocol</button><button class="btn ghost" id="ag">再做</button><button class="btn red" id="ls">其他個案</button></div>';
+    $('#op').onclick=()=>go('p-'+c.slug); $('#ag').onclick=()=>{caseSession={c,i:0,score:0,answered:false,log:[]};showCase()}; $('#ls').onclick=()=>{caseSession=null;cases()}; return;
+  }
+  if(!st._o) st._o=shuffle(st.o.map((t,i)=>({t,ok:i===st.a})));
+  $('#app').innerHTML='<div class="qhead"><span>'+esc(c.title)+' · 第 '+(s.i+1)+' / '+c.steps.length+' 步</span><button class="linkbtn" id="ex">結束</button></div><div class="prog"><i style="width:'+(s.i/c.steps.length*100)+'%"></i></div>'+
+   '<div class="intro">'+esc(c.intro)+'</div>'+
+   (s.log.length?'<div class="small muted" style="margin-top:10px">'+s.log.map((l,i)=>(l.ok?'✅ ':'❌ ')+esc(c.steps[i].o[c.steps[i].a])).join('<br>')+'</div>':'')+
+   '<div class="qtext">'+esc(st.q)+'</div><div id="opts">'+st._o.map((o,i)=>'<button class="opt" data-i="'+i+'">'+esc(o.t)+'</button>').join('')+'</div><div id="fb"></div>';
+  $('#ex').onclick=()=>{caseSession=null;cases()};
+  $('#opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(s.answered)return; s.answered=true;
+    const ok=st._o[+b.dataset.i].ok;
+    $('#opts').querySelectorAll('.opt').forEach((x,i)=>{x.disabled=true;if(st._o[i].ok)x.classList.add('right')});
+    if(!ok)b.classList.add('wrong'); if(ok)s.score++; s.log.push({ok});
+    $('#fb').innerHTML='<div class="exp '+(ok?'ok':'no')+'"><b>'+(ok?'啱！':'唔啱')+'</b>'+esc(st.e)+'</div><button class="btn red block" id="nx" style="margin-top:12px">'+(s.i+1<c.steps.length?'下一步':'睇結果')+'</button>';
+    $('#nx').onclick=()=>{st._o=null;s.i++;s.answered=false;showCase()};
+  });
+}
+
+/* review */
+function review(){
+  header('錯題','答啱一次就會移除');
+  if(quizSession&&quizSession.mode==='review') return showQ();
+  const ids=Object.keys(S.wrong).filter(k=>QBYID[k]).sort((a,b)=>S.wrong[b]-S.wrong[a]);
+  if(!ids.length){ $('#app').innerHTML='<div class="card empty">暫時冇錯題 👍<br><br><button class="btn red" id="gq">去做測驗</button></div>'; $('#gq').onclick=()=>go('quiz'); return; }
+  const unk=Object.keys(S.unknown).length;
+  $('#app').innerHTML='<div class="card"><b>'+ids.length+' 條錯題</b><div class="btns" style="margin-top:12px"><button class="btn red" id="all">全部重做</button></div>'+
+   (unk?'<button class="linkbtn" id="uc" style="margin-top:12px">溫 '+unk+' 張未熟閃卡</button>':'')+'</div>'+
+   '<div class="card" style="padding:4px 14px"><ul class="list">'+ids.map(id=>{const q=QBYID[id];return '<li><button class="row" data-id="'+id+'"><span class="t"><b>'+esc(q.vocab?q.en+' ／ '+q.zh:q.q)+'</b><span>'+esc(titleOf(q.slug))+'</span></span><span class="chev">›</span></button></li>'}).join('')+'</ul></div>'+
+   '<button class="linkbtn" id="clr">清除所有錯題記錄</button>';
+  $('#all').onclick=()=>{startQuiz(shuffle(ids.map(i=>QBYID[i])))};
+  $('#app').querySelectorAll('.row').forEach(b=>b.onclick=()=>startQuiz([QBYID[b.dataset.id]]));
+  const uc=$('#uc'); if(uc) uc.onclick=()=>{cardCfg={src:'protocol',scope:'all',kind:'all',only:true,dir:'en'};cardSession=null;go('cards')};
+  const clr=$('#clr'); let armed=false;
+  clr.onclick=()=>{ if(!armed){armed=true;clr.textContent='再撳一次確認清除';return} S.wrong={};save();review();renderNav(); };
+}
+
+/* notes */
+let notesQ='';
+function mdLines(lines){
+  let h='',inUl=false,tbl=[];
+  const flushT=()=>{ if(!tbl.length)return; h+='<table>'+tbl.map((r,i)=>'<tr>'+r.map(c=>i?'<td>'+esc(c)+'</td>':'<th>'+esc(c)+'</th>').join('')+'</tr>').join('')+'</table>'; tbl=[]; };
+  lines.forEach(l=>{
+    if(l.startsWith('|')){ if(inUl){h+='</ul>';inUl=false} tbl.push(l.slice(1).split('|')); return; }
+    flushT();
+    if(l.startsWith('- ')){ if(!inUl){h+='<ul>';inUl=true} h+='<li>'+esc(l.slice(2))+'</li>'; }
+    else { if(inUl){h+='</ul>';inUl=false} h+='<p>'+esc(l)+'</p>'; }
+  });
+  flushT(); if(inUl)h+='</ul>'; return h;
+}
+function notes(){
+  header(N.title,'已刪除同 ems.homes 衝突嘅內容');
+  const q=notesQ.trim().toLowerCase();
+  const nq=(C.notesQuiz||[]).length;
+  let body='';
+  N.chapters.forEach((ch,ci)=>{
+    const secs=ch.s.filter(sec=>!q||(ch.t+sec.h+sec.b.join(' ')).toLowerCase().includes(q));
+    if(!secs.length) return;
+    body+='<div class="card"><h3 style="margin:0 0 6px;font-size:17px">'+esc(ch.t)+'</h3>'+secs.map(sec=>
+      '<details'+(q?' open':'')+' style="border-top:1px solid var(--line);padding:8px 0"><summary style="cursor:pointer;font-weight:600;padding:4px 0">'+esc(sec.h)+'</summary><div class="pc">'+mdLines(sec.b)+'</div></details>').join('')+'</div>';
+  });
+  $('#app').innerHTML='<input class="search" id="q" placeholder="搜尋筆記（例如：GCS、Venturi、IV）" value="'+esc(notesQ)+'">'+
+   '<div class="btns" style="margin-top:10px"><button class="btn ghost" id="nc">筆記閃卡</button><button class="btn ghost" id="nqz">筆記測驗 ('+nq+')</button></div>'+
+   '<div class="card intro" style="margin-top:12px">'+esc(N.intro)+'<details style="margin-top:8px"><summary style="cursor:pointer;font-weight:600">已刪除嘅過時內容（'+N.removed.length+' 項）</summary><ul>'+N.removed.map(r=>'<li>'+esc(r)+'</li>').join('')+'</ul></details></div>'+
+   (body||'<div class="card empty">搵唔到</div>');
+  const qi=$('#q'); qi.oninput=e=>{notesQ=e.target.value; const pos=e.target.selectionStart; notes(); const n=$('#q'); n.focus(); try{n.setSelectionRange(pos,pos)}catch(_){}};
+  $('#nc').onclick=()=>{cardCfg={src:'notes',scope:'all',kind:'all',only:false,dir:'en'};cardSession=null;go('cards')};
+  $('#nqz').onclick=()=>{quizCfg={scope:'all',n:10,src:'notes'};quizSession=null;startQuiz()};
+}
+
+/* vocab */
+let vocabCat='all', vocabQ='', vocabHide='', vocabTab='words';
+function vocab(){
+  header('英文對照','中英詞彙同報告例句');
+  const total=G.reduce((a,c)=>a+c.items.length,0);
+  let h='<div class="chips"><button class="chip '+(vocabTab==='words'?'on':'')+'" data-t="words">詞彙 ('+total+')</button><button class="chip '+(vocabTab==='sent'?'on':'')+'" data-t="sent">報告例句 ('+SENT.length+')</button></div>'+
+   '<input class="search" id="q" placeholder="搜尋英文或中文" value="'+esc(vocabQ)+'">';
+  if(vocabTab==='words'){
+    h+='<div class="chips" style="margin-top:8px" id="cats"><button class="chip '+(vocabCat==='all'?'on':'')+'" data-c="all">全部</button>'+G.map(c=>'<button class="chip '+(vocabCat===c.id?'on':'')+'" data-c="'+c.id+'">'+esc(c.name)+'</button>').join('')+'</div>'+
+     '<div class="chips"><span class="small muted" style="align-self:center">自測：</span>'+[['','全部顯示'],['zh','遮中文'],['en','遮英文']].map(([k,l])=>'<button class="chip '+(vocabHide===k?'on':'')+'" data-h="'+k+'">'+l+'</button>').join('')+'</div>'+
+     '<div class="btns" style="margin:4px 0 0"><button class="btn ghost" id="vc">詞彙閃卡</button><button class="btn ghost" id="vq">詞彙測驗</button></div>'+
+     '<div id="vl"></div>';
+  } else h+='<div id="vl"></div>';
+  $('#app').innerHTML=h;
+  $('#app').querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{vocabTab=b.dataset.t;vocab()});
+  const cats=$('#cats'); if(cats) cats.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{vocabCat=b.dataset.c;vocab()});
+  $('#app').querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>{vocabHide=b.dataset.h;vocab()});
+  const vc=$('#vc'); if(vc) vc.onclick=()=>{const c=G.find(x=>x.id===vocabCat);cardCfg={src:'vocab',scope:c?c.name:'all',kind:'all',only:false,dir:vocabHide==='en'?'zh':'en'};cardSession=null;go('cards')};
+  const vq=$('#vq'); if(vq) vq.onclick=()=>{
+    const c=G.find(x=>x.id===vocabCat); const list=shuffle(VQ.filter(q=>!c||q.cat===c.name)).slice(0,10);
+    quizCfg={scope:'all',n:10,src:'vocab'}; quizSession=null; startQuiz(list,'quiz'); };
+  const draw=()=>{
+    const q=vocabQ.trim().toLowerCase();
+    if(vocabTab==='sent'){
+      const l=SENT.filter(x=>!q||(x.en+x.zh+x.cat).toLowerCase().includes(q));
+      $('#vl').innerHTML=l.length?'<div class="card" style="padding:4px 14px">'+l.map(x=>'<div style="padding:10px 0;border-bottom:1px solid var(--line)"><span class="tag vocab">'+esc(x.cat)+'</span><p style="margin:6px 0 2px;font-weight:600">'+esc(x.en)+'</p><p class="muted" style="margin:0">'+esc(x.zh)+'</p></div>').join('')+'</div>':'<div class="card empty">搵唔到</div>';
+      return;
+    }
+    let out='';
+    G.forEach(c=>{
+      if(vocabCat!=='all'&&c.id!==vocabCat) return;
+      const it=c.items.filter(([en,zh])=>!q||en.toLowerCase().includes(q)||zh.includes(vocabQ.trim()));
+      if(!it.length) return;
+      out+='<div class="card" style="padding:8px 14px"><b class="small" style="color:var(--cyan)">'+esc(c.name)+'</b><table style="width:100%;border-collapse:collapse;margin-top:4px">'+
+        it.map(([en,zh])=>'<tr class="vrow" style="border-top:1px solid var(--line);cursor:pointer"><td style="padding:8px 6px 8px 0;width:55%"><span class="'+(vocabHide==='en'?'hid':'')+'">'+esc(en)+'</span></td><td style="padding:8px 0"><span class="'+(vocabHide==='zh'?'hid':'')+'">'+esc(zh)+'</span></td></tr>').join('')+'</table></div>';
+    });
+    $('#vl').innerHTML=out||'<div class="card empty">搵唔到</div>';
+    $('#vl').querySelectorAll('.vrow').forEach(r=>r.onclick=()=>r.querySelectorAll('.hid').forEach(x=>x.classList.toggle('show')));
+  };
+  $('#q').oninput=e=>{vocabQ=e.target.value;draw()};
+  draw();
+}
+
+route();
+})();
+</script>
+</body>
+</html>

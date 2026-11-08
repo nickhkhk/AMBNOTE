@@ -1,0 +1,233 @@
+// 人手整理嘅溫習內容 —— 全部根據 ems.homes 原文（2025-11 / 2025-12 版本）
+window.CURATED = {
+// 藥物／程序嘅禁忌症清單（用嚟自動出「邊項係禁忌症」題）
+contra: [
+ {id:'ventolin', name:'Salbutamol (Ventolin)', slug:'respiratory', items:['對 Ventolin 敏感']},
+ {id:'atrovent', name:'Ipratropium Bromide (Atrovent)', slug:'respiratory', items:['< 12 歲','對 Ipratropium Bromide 或 Atropine 敏感','病人正在懷孕或正在母乳餵哺','急性青光眼發作 (Acute Glaucoma Attack)']},
+ {id:'asa', name:'Acetylsalicylic Acid (ASA)', slug:'cardiac_chest_pain', items:['病人裝有左心室輔助器 (LVAD)','無法吞嚥 (Swallow)','< 12 歲','懷孕病人','對 ASA 或 NSAIDs 過敏','證據顯示現在出現不能控制的內／外出血','24 小時內曾因該次心臟不適服用 ASA','一星期內做過任何大小的手術']},
+ {id:'ntg', name:'Nitroglycerin (NTG)', slug:'cardiac_chest_pain', items:['對 NTG / Nitrates 過敏','72 小時內曾服用／使用聲稱可增強、治療性功能障礙的藥物','收縮壓 (SBP) < 100 mmHg','心率 (HR) > 150','病人裝有左心室輔助器 (LVAD)']},
+ {id:'glucagon', name:'Glucagon', slug:'glucagon', items:['< 12 歲','對 Glucagon 敏感','病人有嗜咯細胞瘤 (Phaeochromocytoma)']},
+ {id:'naloxone', name:'Naloxone', slug:'narcotic_overdose', items:['< 12 歲','對 Naloxone 敏感']},
+ {id:'charcoal', name:'Activated Charcoal', slug:'activated_charcoal', items:['< 12 歲','病人攝入該物質超過 2 小時','對 活性碳 敏感','清醒程度下降、不合作、不能自行飲用、吞嚥困難、氣道不暢通、窒息或嘔吐','未獲得香港中毒諮詢中心 (HKPIC) 當值醫生批准']},
+ {id:'midazolam', name:'Midazolam (Convulsion)', slug:'convulsion', items:['病人體重 < 3 kg','對 Midazolam 敏感','病人抽搐已停止','5 分鐘內曾使用 Benzodiazepines 停止抽搐藥','病人已被救護人員給予共 2 劑 Midazolam']},
+ {id:'piriton', name:'Chlorpheniramine (Piriton)', slug:'basic_anaphylaxis', items:['< 12 歲','對 Chlorpheniramine (Piriton) 敏感','4 小時內用過針對今次敏感的任何抗組織胺藥']},
+ {id:'tramadol', name:'Tramadol', slug:'tramadol', items:['兩星期內曾服用含止咳的混合劑','收縮壓 < 90 mmHg','有癲癇或癲癇病歷','< 18 歲','兩星期內因精神科病需服用精神科藥物 (包括安眠藥)','懷孕婦女或母乳餵哺嬰兒的女性','濫藥或吸毒者','急性酒精中毒','對麻醉劑 / Tramadol 敏感']},
+ {id:'olanzapine', name:'Olanzapine (Excited Delirium)', slug:'olanzapine', items:['對 Olanzapine 敏感','急性青光眼發作','年齡 < 12 歲 或 > 65 歲','收縮壓 (SBP) < 90 mmHg','有神經阻滯劑惡性綜合症 (NMS)']},
+ {id:'penthrox', name:'Penthrox', slug:'penthrox', items:['< 12 歲','收縮壓 (SBP) < 90 mmHg','24 小時內曾使用 Penthrox','肝病','腎病','惡性高熱 (Malignant Hyperthermia)','清醒程度改變／下降 (例如發狂、醉酒)','呼吸抑制 (Respiratory Depression)','對 Penthrox 敏感']},
+ {id:'lma', name:'LMA Supreme', slug:'lma_supreme', items:['< 12 歲','上呼吸道腫脹 (膿瘡、血腫、過敏性水腫、腫瘤、吸入性損傷)','上呼吸道結構破壞 (開放性／閉合性／穿透性創傷、造口)','上呼吸道阻塞 (異物梗塞、急性會厭炎、牙關緊閉、回湧)']},
+ {id:'ltsd', name:'Laryngeal Tube (LTS-D)', slug:'laryngeal_tube', items:['上呼吸道阻塞','異物梗塞','懷疑急性會厭炎','懷疑上呼吸道腫脹 (例如過敏性水腫、吸入性損傷)','已知的食道疾病 (例如食道切除術後)','攝入腐蝕性物質']},
+ {id:'combitube', name:'Combitube', slug:'combitube', items:['身高 < 4 英尺 (< 122 cm)','上呼吸道阻塞 (異物沉積、會厭炎、聲門水腫)','已知的食道疾病','攝入腐蝕性物質','嘔吐反射完整的患者']},
+ {id:'accm', name:'ACCM 自動胸外按壓機', slug:'accm', items:['懷孕患者','胸部嚴重外傷 (大面積開放性損傷撕裂／胸腔嚴重變形)','附近有潛在爆炸危機／身處易燃氣體環境']},
+ {id:'ecg', name:'12-Lead ECG', slug:'12leadecg', items:['病人心臟驟停','無法處理病人的氣道和/或呼吸','GCS ≦ 13','收縮壓 < 90 mmHg 或 遠端血液回流灌注 > 2 秒','呼吸頻率 (RR) < 10 或 > 29']},
+ {id:'o2', name:'Supplemental O2 Therapy', slug:'supplementalo2therapy', items:['初生嬰兒','心臟驟停的病人']},
+ {id:'hd', name:'Haemostatic Dressing (HD)', slug:'hd', items:['眼球、大腦、脊椎和類似的身體結構','胸部或腹部有大傷口，無法看到確切出血部位']},
+ {id:'hat', name:'Haemostatic Arterial Tourniquet (HAT)', slug:'hat', items:['嚴重創傷 (例如骨折或傷口) 位於止血帶使用位置']},
+ {id:'tpod', name:'T-POD', slug:'t_pod', items:['< 50 磅 (23 kg)']},
+ {id:'aed', name:'AED', slug:'aed', items:['新生嬰兒 (任何在院前情況出生的嬰兒)']}
+],
+
+// 人手題目
+quiz: [
+ // ---- 劑量 ----
+ {id:'q1', slug:'cardiac_chest_pain', q:'ASA (Aspirin) 嘅劑量係？', o:['100 mg，可重複','200 mg，Only One Dose','300 mg，Only One Dose','0.4 mg per puff'], a:1, e:'ASA 200 mg，只可給一劑 (Only One Dose)。'},
+ {id:'q2', slug:'cardiac_chest_pain', q:'NTG 嘅劑量同上限係？', o:['0.4 mg per puff，最多 3 puff','0.4 mg per puff，最多 2 puff','0.8 mg per puff，最多 3 puff','0.4 mg，只可一劑'], a:0, e:'NTG 0.4 mg per puff，Max 3 puff；收縮壓需要 ≧ 100 及心率 ≦ 150。'},
+ {id:'q3', slug:'respiratory', q:'≧ 12 歲病人用 Salbutamol (Ventolin)，每劑係？', o:['200 mcg / 2 puffs','300 mcg / 3 puffs','400 mcg / 4 puffs','40 mcg / 2 puffs'], a:2, e:'2 至 <5 歲：200 mcg / 2 puffs；5 至 <12 歲：300 mcg / 3 puffs；≧12 歲：400 mcg / 4 puffs。'},
+ {id:'q4', slug:'respiratory', q:'Ipratropium Bromide (Atrovent) 嘅劑量係？', o:['20 mcg / 1 puff','40 mcg / 2 puffs','400 mcg / 4 puffs','80 mcg / 4 puffs'], a:1, e:'Atrovent 40 mcg，2 puffs。'},
+ {id:'q5', slug:'respiratory', q:'用完第一劑 Ventolin 之後病人仍然氣促，幾耐之後可以俾下一劑？', o:['即刻','與上一次用藥相隔 3 分鐘','與上一次用藥相隔 5 分鐘','與上一次用藥相隔 10 分鐘'], a:2, e:'與上一次用藥時間相隔 5 分鐘，給予相應歲數嘅 2nd / 3rd / 4th 劑量。'},
+ {id:'q6', slug:'glycemia', q:'1st H\'stix ≦ 4，經 IV 俾 D10W 嘅速度係？', o:['100 ml / hr (兩秒一滴)','100 ml / FR (Full Rate)','200 ml / hr','500 ml / FR'], a:1, e:'IV (1st H\'stix ≦ 4)：100 ml / FR，預先接駁 3-way。'},
+ {id:'q7', slug:'glycemia', q:'2nd H\'stix 介乎 > 4 及 ≦ 20，D10W 應該點樣調整？', o:['停止 D10W','再俾 100 ml / FR','100 ml / hr (兩秒一滴)','改用 Normal Saline'], a:2, e:'IV (2nd H\'stix > 4 和 ≦ 20)：100 ml / hr (兩秒一滴)。'},
+ {id:'q8', slug:'glycemia', q:'1st H\'stix > 20，應該俾咩？', o:['D10W 100 ml / FR','Normal Saline 200 ml / hr (一秒一滴)','Normal Saline 500 ml / FR','Glucagon 1 mg'], a:1, e:'IV (1st H\'stix > 20)：0.9% NS 200 ml / hr (一秒一滴)，口訣「滴二三四、滴二三四」。'},
+ {id:'q9', slug:'glycemia', q:'Thiamine 嘅劑量同給藥方法？', o:['100 mg / 1 ml IMI','50 mg / 0.5 ml，3-way 落藥','50 mg / 1 ml 口服','25 mg / 0.5 ml SC'], a:1, e:'Thiamine 50 mg / 0.5 ml，經 3-way 落藥；用於給予 D10W (IV) 時嘅預防。口服 D10W 唔需要 Thiamine。'},
+ {id:'q10', slug:'glucagon', q:'Glucagon 嘅劑量係？如有 IMI 禁忌症點算？', o:['1 mg / 1 ml；有 IMI 禁忌症就唔俾','1 mg / 1 ml；有 IMI 禁忌症可改用 SC 皮下注射','0.5 mg / 1 ml；改用 IV','2 mg / 2 ml；改用 IN'], a:1, e:'Glucagon 1 mg / 1 ml；如有 IMI 禁忌症，可透過 SC 皮下注射。'},
+ {id:'q11', slug:'narcotic_overdose', q:'Naloxone 嘅劑量係？病人有 IMI 禁忌症仲要唔要打？', o:['0.4 mg / 1 ml；要打，之後施針位置加壓及通知醫護','0.4 mg / 1 ml；唔需要打','0.8 mg / 2 ml；要打','2 mg / 1 ml；改用 IN'], a:0, e:'Naloxone 0.4 mg / 1 ml。有 IMI 禁忌症都需要注射，注射後喺施針位置直接加壓止血並通知醫護人員。'},
+ {id:'q12', slug:'activated_charcoal', q:'Activated Charcoal 嘅份量係？', o:['25 g / 125 ml','50 g / 250 ml','50 g / 500 ml','100 g / 250 ml'], a:1, e:'活性炭 50 g / 250 ml，需記錄病人飲用份量。'},
+ {id:'q13', slug:'convulsion', q:'≧ 12 歲、體重 ≧ 50 kg 嘅抽搐病人，Midazolam 第 1 劑係？', o:['7.5 mg / 1.5 ml','10 mg / 2 ml','5 mg / 1 ml','15 mg / 3 ml'], a:1, e:'≧ 50 kg：1st 10 mg / 2 ml；2nd 5 mg / 1 ml。< 50 kg：1st 7.5 mg / 1.5 ml；2nd 3.75 mg / 0.75 ml。'},
+ {id:'q14', slug:'convulsion', q:'經 IN 鼻內注射 Midazolam 時要注意？', o:['只用一邊鼻孔','需抽取多 0.1 ml，然後每邊鼻孔注射一半劑量','需抽取多 0.5 ml','需用生理鹽水稀釋'], a:1, e:'使用 IN 鼻內注射前需抽取多 0.1 ml，其後每邊鼻孔注射一半劑量。'},
+ {id:'q15', slug:'convulsion', q:'Midazolam 生效時間同持續時間係？', o:['生效 1–5 分鐘；持續 15–30 分鐘','生效 5–10 分鐘；持續 30–60 分鐘','生效 1 分鐘內；持續 5 分鐘','生效 10 分鐘；持續 2 小時'], a:0, e:'生效時間 1–5 分鐘，持續時間 15–30 分鐘。'},
+ {id:'q16', slug:'basic_anaphylaxis', q:'EpiPen / Jext 嘅劑量 (成人／小童)？', o:['成人 0.5 mg；小童 0.3 mg','成人 0.3 mg；小童 0.15 mg','成人 1 mg；小童 0.5 mg','成人 0.15 mg；小童 0.1 mg'], a:1, e:'成人 0.3 mg；小童 0.15 mg。注射後停留 10 秒先抽出。'},
+ {id:'q17', slug:'basic_anaphylaxis', q:'同一次過敏，第 2 支 EpiPen / Jext 同第 1 支要相隔幾耐？', o:['3 分鐘','5 分鐘','10 分鐘','15 分鐘'], a:1, e:'每支相隔 5 分鐘；先用病人自己嘅，處方提供嘅上限為一支。病人喺救護員到場前已用咗，唔應該喺現場拖延去等夠 5 分鐘。'},
+ {id:'q18', slug:'basic_anaphylaxis', q:'Chlorpheniramine (Piriton) 嘅劑量？有 IMI 禁忌症點算？', o:['10 mg / 1 ml；有 IMI 禁忌症就唔需要注射','10 mg / 1 ml；照樣注射','4 mg / 1 ml；改口服','20 mg / 2 ml；改 SC'], a:0, e:'Piriton 10 mg / 1 ml；如有 IMI 禁忌症，不需要注射。'},
+ {id:'q19', slug:'tramadol', q:'體重 ≧ 50 kg 病人，Tramadol 嘅劑量係？', o:['50 mg / 1 ml','75 mg / 1.5 ml','100 mg / 2 ml','75 mg / 1 ml'], a:1, e:'< 50 kg：50 mg / 1 ml；≧ 50 kg：75 mg / 1.5 ml。有 IMI 禁忌症就不需要注射。'},
+ {id:'q20', slug:'tranexamic_acid', q:'TXA 點樣注射？', o:['1 g 一次過推','每分鐘 100 mg / 1 ml，10 分鐘內分 10 次','每分鐘 50 mg，20 分鐘','每 5 分鐘 200 mg'], a:1, e:'每分鐘 100 mg / 1 ml，喺 10 分鐘內分開 10 次注射；開始咗之後，唔理血壓有冇升返 ≧ 90 都要完成 10 次。'},
+ {id:'q21', slug:'tranexamic_acid', q:'注射 TXA 期間病人突然心搏停止，點處理？', o:['停止 TXA','繼續每分鐘 100 mg','將剩低嘅 TXA 一次過全部注射，然後行 AED / Adrenaline','改打 Amiodarone'], a:2, e:'可將剩下劑量嘅 TXA 全部一次注射，其後可行使 AED 及/或 Adrenaline Protocol。'},
+ {id:'q22', slug:'tranexamic_acid', q:'注射 TXA 期間病人突然抽搐，點處理？', o:['停止 TXA','將剩低嘅一次過推','繼續每分鐘 100 mg / 1 ml，同時可行 Convulsion Protocol','先完成 Convulsion Protocol 再繼續 TXA'], a:2, e:'應繼續根據時間每分鐘注射 100 mg / 1 ml，並可同時行使 Convulsion Protocol。'},
+ {id:'q23', slug:'olanzapine', q:'Olanzapine 點樣準備？', o:['抽 2 ml 注射用水，抽出 10 mg / 2 ml','抽 2.1 ml 注射用水混合，再抽出 10 mg / 2 ml','直接抽 5 mg / 1 ml','抽 2.1 ml 生理鹽水，抽出 5 mg / 1 ml'], a:1, e:'先抽 2.1 ml 注射用水入 Olanzapine 藥瓶，混合後抽出 10 mg / 2 ml。'},
+ {id:'q24', slug:'olanzapine', q:'Olanzapine IMI 注射位置係？', o:['三角肌','臀大肌','股外肌 (大腿前外側中 1/3)','腹部皮下'], a:2, e:'注射位置：股外肌 (大腿前外側中 1/3)。有 IMI 禁忌症都需要注射，之後加壓止血及通知醫護。'},
+ {id:'q25', slug:'adrenaline', q:'心搏停止時 Adrenaline 嘅劑量同上限？', o:['1 mg / 10 ml，每 3–5 分鐘，最多 5 次','1 mg / 1 ml，每 5 分鐘，最多 3 次','0.5 mg / 5 ml，每 3 分鐘，無上限','1 mg / 10 ml，每 2 分鐘，最多 10 次'], a:0, e:'Adrenaline 1 mg / 10 ml，每 3–5 分鐘，最多 5 次。'},
+ {id:'q26', slug:'amiodarone', q:'Amiodarone 第 1 同第 2 劑係？', o:['1st 150 mg；2nd 300 mg','1st 300 mg；2nd 150 mg','1st 300 mg；2nd 300 mg','1st 5 mg/kg；2nd 2.5 mg/kg'], a:1, e:'1st 300 mg；2nd 150 mg。'},
+ {id:'q27', slug:'penthrox', q:'Penthrox 嘅劑量係？', o:['3 ml，Only One Dose','3 ml，可重複 2 次','6 ml，Only One Dose','1.5 ml，每 30 分鐘'], a:0, e:'Penthrox 3 ml，只可給一劑；24 小時內曾用 Penthrox 係禁忌症。'},
+ {id:'q28', slug:'hypovolemia', q:'SBP < 90 (之前俾咗 0 或 1 次 500 ml / FR)，NS 應該點俾？', o:['100 ml / hr','500 ml / hr','500 ml / FR (Full Rate)','1000 ml / FR'], a:2, e:'SBP < 90 (給予 0/1 次 500 ml / FR 後)：500 ml / FR。FULL RATE 不超過 1000 ml。'},
+ {id:'q29', slug:'hypovolemia', q:'SBP ≧ 90 而從未俾過 500 ml / FR，NS 速度係？', o:['100 ml / hr (兩秒一滴)','200 ml / hr (一秒一滴)','500 ml / hr (兩秒五滴)','500 ml / FR'], a:0, e:'≧ 90 (從未給予 500 ml / FR)：100 ml / hr (兩秒一滴)。'},
+ {id:'q30', slug:'hypovolemia', q:'已經俾咗兩次 500 ml / FR，之後 NS 速度係？', o:['停止 NS','100 ml / hr','500 ml / hr (兩秒五滴)，不理會 SBP','再俾 500 ml / FR'], a:2, e:'兩次 500 ml / FR 後 (不理會 SBP)：500 ml / hr (兩秒五滴)。FULL RATE 不超過 1000 ml。'},
+ // ---- 適用症／準則 ----
+ {id:'q31', slug:'amiodarone', q:'以下邊項唔係 Amiodarone 嘅適用條件？', o:['心臟驟停','年齡 ≧ 12 歲','病人已進行 3 次電擊','病人已注射最少 3 劑 Adrenaline'], a:3, e:'Amiodarone：心臟驟停 及 ≧12 歲 及 已進行 3 次電擊 及 已注射最少 1 劑 Adrenaline。'},
+ {id:'q32', slug:'tranexamic_acid', q:'TXA 適用症中，創傷要喺幾耐之內發生？', o:['1 小時','2 小時','3 小時','6 小時'], a:2, e:'嚴重創傷懷疑大量出血 及 創傷發生在 3 小時內 及 ≧ 18 歲 及 SBP < 90 mmHg。'},
+ {id:'q33', slug:'tranexamic_acid', q:'TXA 嘅年齡要求係？', o:['≧ 12 歲','≧ 16 歲','≧ 18 歲','任何年齡'], a:2, e:'TXA 適用於年齡 ≧ 18 歲。'},
+ {id:'q34', slug:'activated_charcoal', q:'Activated Charcoal 要求攝入時間喺幾耐內？', o:['1 小時','2 小時','4 小時','6 小時'], a:1, e:'攝入時間要喺 2 小時內；超過 2 小時係禁忌症。另外要獲 HKPIC 當值醫生批准。'},
+ {id:'q35', slug:'basic_anaphylaxis', q:'Basic Anaphylaxis 適用症嘅組合係？', o:['A 或 B 或 C 任何一項','A + B、A + C 或 A + B + C','B + C','只需 C (低血壓)'], a:1, e:'A Skin + B Airway Obstruction、A + C Hypotension，或 A + B + C。'},
+ {id:'q36', slug:'basic_anaphylaxis', q:'< 12 歲病人評估 Anaphylaxis 嘅「C. Hypotension」，用咩取代量血壓？', o:['心率 > 120','遠端血液回流灌注 > 2 秒','SpO2 < 94%','GCS 下降'], a:1, e:'年齡 < 12 歲（及 LVAD 病人）檢查 [遠端血液回流灌注 > 2 秒] 取代 [SBP < 90]。'},
+ {id:'q37', slug:'pre_hospital_stroke_assessment', q:'院前中風評估嘅適用症要求病發或最後正常時間喺幾耐內？', o:['3 小時','4 小時','4.5 小時','6 小時'], a:1, e:'突發性／單邊肢體無力或語言障礙，及病發或最後正常時間於 4 小時內。'},
+ {id:'q38', slug:'pre_hospital_stroke_assessment', q:'以下邊項唔係院前中風通報條件？', o:['18 歲或以上','並非長期臥床或輪椅使用者','SBP > 100 mmHg 及 GCS ≥ 8','SpO2 ≥ 94%'], a:3, e:'通報條件：≧18 歲；非長期臥床／輪椅使用者；SBP > 100 及 GCS ≥ 8；已排除低血糖 (H\'stix > 4.0)。'},
+ {id:'q39', slug:'pre_hospital_stroke_assessment', q:'FAST-ED 總分範圍係？', o:['0–5','0–9','0–12','3–15'], a:1, e:'FAST-ED 總分 0–9 分；新界東／西試行計劃中，那打素、北區、博愛、天水圍醫院 ≧4 分會分流。'},
+ {id:'q40', slug:'trauma_diversion', q:'創傷分流：成人由幾高墮下要送創傷中心？', o:['3 米 (10 呎) 以上','4 米 (13 呎) 以上','6 米 (20 呎) 以上','10 米 (33 呎) 以上'], a:2, e:'成人 (≧12 歲) 由 6 米 (20 呎) 以上墮下；小童 (<12 歲) 由 3 米 (10 呎) 或該小童身高兩倍以上。'},
+ {id:'q41', slug:'trauma_diversion', q:'創傷分流：GCS 幾多分要送創傷中心？', o:['3–8 分','3–13 分','3–14 分','≦ 15 分'], a:1, e:'GCS 3–13 分 (曾經亦包括) → 到創傷中心；14–15 分繼續查看。'},
+ {id:'q42', slug:'trauma_diversion', q:'創傷病人心臟驟停，應該送去？', o:['創傷中心','最就近醫院','屬區醫院','瑪麗醫院'], a:1, e:'病人心臟驟停 → 到最就近醫院；不能有效處理氣道及/或呼吸 → 亦到最就近醫院。'},
+ {id:'q43', slug:'trauma_diversion', q:'創傷分流：幾多 % 皮膚面積涉及二級或以上燒傷要送創傷中心？', o:['≥ 9%','≥ 15%','≥ 20%','≥ 30%'], a:2, e:'≥ 20% 嘅皮膚面積涉及二級或以上燒傷 → 到創傷中心。'},
+ {id:'q44', slug:'trauma_diversion', q:'創傷分流：呼吸頻率幾多要送創傷中心？', o:['< 8 或 ≥ 24','< 10 或 ≥ 30','< 12 或 ≥ 28','< 10 或 > 29'], a:1, e:'每分鐘呼吸頻率 < 10 或 ≥ 30 → 到創傷中心。'},
+ {id:'q45', slug:'aed', q:'送院途中目擊心搏停頓，1st 分析建議電擊。之後救護車應該？', o:['電擊後即刻開車','電擊後 2 分鐘 CPR，救護車維持停車直至 2nd 分析完成，之後不論結果即送最就近醫院','停車直至 ROSC','每次分析都要停車'], a:1, e:'整個 Ambulance Journey 只有喺第一次分析需要電擊時，先停低做 2 分鐘 CPR；2nd 分析完成後不論結果即送最就近醫院。'},
+ {id:'q46', slug:'aed', q:'小童或嬰兒脈搏不足每分鐘 60 次並有循環差嘅徵狀，應該？', o:['CPR + AED','CPR，但不需使用 AED，送屬區醫院','只給氧，送最就近醫院','AED 分析一次'], a:1, e:'施行 CPR 但不需使用 AED；此類病人應送往屬區醫院。'},
+ {id:'q47', slug:'lma_supreme', q:'如喺現場需要電擊，插入 LMA Supreme 整個程序要喺幾耐內完成？', o:['10 秒','30 秒','60 秒','2 分鐘'], a:1, e:'需儘快喺 2 分鐘 CPR 時間內，用不多於 30 秒完成整個插入程序 (包括開始 BVM Bagging)。'},
+ {id:'q48', slug:'lma_supreme', q:'置入 LMA Supreme 後，ACCM 同灌氣應該點設定？', o:['保持 30:2','ACCM 改為 cont.，每 6 秒灌氣一次，唔停心外壓灌氣','ACCM 改為 15:2','停 ACCM 改人手 CPR'], a:1, e:'ACCM 由 30:2 改為 cont.；每 6 秒灌氣一次；不應為灌氣而停頓心外壓。'},
+ {id:'q49', slug:'lma_supreme', q:'LMA Supreme #4 嘅灌氣量係？', o:['30 ml','45 ml','60 ml','20 ml'], a:1, e:'#3：30 ml；#4：45 ml；#5：45 ml。'},
+ {id:'q50', slug:'accm', q:'ACCM 適用於幾歲或以上嘅心搏停止病人？', o:['≧ 8 歲 (身高 ≧ 115 cm)','≧ 12 歲','≧ 18 歲','任何年齡'], a:0, e:'心搏停止嘅成年患者，即 ≧ 8 歲 (度尺身高 ≧ 115 cm)，及可以正確安全穩固地安裝 ACCM。'},
+ {id:'q51', slug:'supplementalo2therapy', q:'鼻插喉 (Nasal Cannula) 只可以俾幾歲或以上嘅病人？', o:['≧ 2 歲','≧ 5 歲','≧ 8 歲','≧ 12 歲'], a:2, e:'鼻插喉只能提供給予 ≧ 8 歲嘅病人；用氧時保持每兩分鐘監察 SpO2。'},
+ {id:'q52', slug:'respiratory', q:'COAD 病人用文氏面罩，開始時 FiO2 係？', o:['0.24 @ 3 L/min','0.28 @ 4 L/min','0.35 @ 6 L/min','0.40 @ 8 L/min'], a:0, e:'COAD 患者：開始文氏面罩程序，FiO2 由 0.24 @ 3 L/min 開始。'},
+ {id:'q53', slug:'12leadecg', q:'12-Lead ECG 嘅適用症係？', o:['所有胸痛病人','≧ 12 歲 及 有心源性胸痛／不適','≧ 18 歲 及 心律不正','所有 GCS ≦ 13 病人'], a:1, e:'病人 ≧ 12 歲 及 有心源性胸痛／不適。GCS ≦ 13 反而係禁忌症。'},
+ {id:'q54', slug:'t_pod', q:'T-POD 嘅禁忌症係？', o:['< 50 磅 (23 kg)','< 12 歲','懷孕','SBP < 90'], a:0, e:'T-POD 禁忌症：< 50 磅 (23 kg)。適用於根據 MOI 及表面徵狀有骨盆受傷跡象。'},
+ {id:'q55', slug:'sager', q:'Sager 牽引夾板用喺上或下 1/3 嘅脛骨／腓骨／股骨骨折時，最多施加幾多張力？', o:['5 磅','10 磅','15 磅','唔可以用'], a:0, e:'上或下 1/3 骨折：僅施加最多 5 磅張力來穩定骨折；中段 1/3 明顯壓倒性骨折適用。'},
+ {id:'q56', slug:'tramadol', q:'Tramadol 禁忌症嘅記憶口訣係？', o:['SAMPLE','CHEAP PAIN','MIAMIA','OPQRST'], a:1, e:'CHEAP PAIN：Anti-Cough、Hypotension、Epilepsy、Age、Psychiatric、Pregnant、Abuse、Intoxication、Narcotics hypersensitivity。'},
+ {id:'q57', slug:'glycemia', q:'低血糖病人上車後問病歷，用咩口訣？', o:['SAMPLE','MIAMIA','OPQRST','AVPU'], a:1, e:'MIAMIA：Meal、Insulin、Activity、Medication、Illness、Alcohol。'},
+ {id:'q58', slug:'tramadol', q:'用 Tramadol 之前，病人通常要先符合咩條件？', o:['已用 Ventolin','拒絕／不能用 Penthrox (有禁忌症) 或用後無止痛效果','SBP < 90','已打 TXA'], a:1, e:'Tramadol 適用：軀體／肢體創傷導致劇烈疼痛且完全清醒 及 拒絕／不能使用 Penthrox 或使用後無效。'},
+ {id:'q59', slug:'adrenaline', q:'LVAD 病人符合 Adrenaline「心臟驟停」需要以下邊組條件？', o:['SBP < 90 及 GCS < 8','沒有可檢測到嘅脈搏 及 GCS = 111 及 RR = 0','只需冇脈搏','SpO2 無法量度'], a:1, e:'包括：沒有可檢測到嘅脈搏；GCS = 111；RR = 0 (頻死呼吸或沒有呼吸)。AED 亦需通知 CTSD of QMH。'},
+ {id:'q60', slug:'combitube', q:'Combitube 嘅身高禁忌症係？', o:['< 4 英尺 (< 122 cm)','< 5 英尺 (< 152 cm)','< 115 cm','冇身高限制'], a:0, e:'Combitube 禁忌症：身高 < 4 英尺 (< 122 cm)，及嘔吐反射完整等。'}
+],
+
+// 參考筆記題目（只用同 ems.homes 冇衝突嘅內容）
+notesQuiz: [
+ {id:'n1', ch:'五', q:'GCS 動作反應 (M) 4 分係？', o:['痛撥開 (Localizes pain)','痛縮 (Withdraws from pain)','痛屈曲 (Flexion)','痛伸直 (Extension)'], a:1, e:'M：6 服從指令、5 痛撥開、4 痛縮、3 痛屈曲、2 痛伸直、1 冇反應。'},
+ {id:'n2', ch:'五', q:'GCS 說話反應 (V) 3 分係？', o:['說話含糊 (Confused)','答非所問 (Inappropriate words)','不能理解的聲音','有條理'], a:1, e:'V：5 有條理、4 說話含糊、3 答非所問、2 不能理解嘅聲音、1 冇反應。'},
+ {id:'n3', ch:'五', q:'GCS 最低同最高分係？', o:['0 同 15','1 同 15','3 同 15','3 同 14'], a:2, e:'最少 3 分，最多 15 分。'},
+ {id:'n4', ch:'二', q:'成人 (≥ 8 歲) 每次 Suction 唔可以多過幾耐？', o:['5 秒','10 秒','15 秒','20 秒'], a:1, e:'成人不多過 10 秒；< 8 歲小童不多過 5 秒。'},
+ {id:'n5', ch:'二', q:'以下邊類病人唔可以用 NPA 鼻喉？', o:['昏迷病人','8 歲以下或鼻骨變形','有嘔吐反射嘅病人','COPD 病人'], a:1, e:'不能使用：鼻骨變形或有問題；8 歲以下。'},
+ {id:'n6', ch:'二', q:'COPD 病人用文氏面罩，目標 SpO2 係？', o:['≥ 96%','94–98%','90–94%','85–89%'], a:2, e:'目標 90–94%；> 94% 調低一級，但唔可以低過 3 L / 24%。'},
+ {id:'n7', ch:'二', q:'文氏面罩病人 SpO2 85–89%，應該？', o:['每 0.5–1 分鐘評估，調高一級','每 1–2 分鐘評估，調高一級','維持現時度數','調低一級'], a:1, e:'SpO2 < 85%：0.5–1 分鐘評估調高；85–89%：1–2 分鐘評估調高；90–94%：維持。'},
+ {id:'n8', ch:'二', q:'以下邊種情況 SpO2 讀數唔可信？', o:['身處高山','一氧化碳中毒（燒炭）','病人戴眼鏡','病人坐著'], a:1, e:'燒炭、貧血、大量失血、血管阻塞、血壓過低時讀數唔可信；高山唔影響儀器準確度。'},
+ {id:'n9', ch:'一', q:'摸到 Radial pulse，大約表示上壓最少幾多？', o:['60 mmHg','70 mmHg','80 mmHg','90 mmHg'], a:2, e:'Radial ≥ 80；Femoral ≥ 70；Carotid ≥ 60（約數）。'},
+ {id:'n10', ch:'一', q:'穩定病人幾耐錄取一次維生指數？', o:['每 5 分鐘','每 10 分鐘','每 15 分鐘','每 30 分鐘'], a:2, e:'不穩定病人 Q5；穩定病人 Q15。'},
+ {id:'n11', ch:'一', q:'Cap refill 正常係？', o:['按 5 秒，2 秒內轉紅','按 2 秒，5 秒內轉紅','按 10 秒，3 秒內轉紅','按 5 秒，5 秒內轉紅'], a:0, e:'按指甲／趾甲 5 秒，放開後 2 秒內轉紅。'},
+ {id:'n12', ch:'一', q:'PQRST 入面「R」代表？', o:['Rate 速率','Radiation 擴散／減輕','Rhythm 節律','Relief 止痛'], a:1, e:'P 位置、Q 性質、R 擴散／減輕、S 嚴重程度（止痛）、T 時間。'},
+ {id:'n13', ch:'五', q:'三角肌 (Deltoid) 肌肉注射最多可以打幾多？', o:['0.5 ml','1 ml','2 ml','5 ml'], a:1, e:'三角肌最多 1 ml；大腿肌肉最多約 5 ml。'},
+ {id:'n14', ch:'五', q:'1 g / 200 ml 嘅藥要抽 125 mg，應抽幾多 ml？', o:['12.5 ml','25 ml','50 ml','62.5 ml'], a:1, e:'125 × 200 ÷ 1000 = 25 ml。'},
+ {id:'n15', ch:'五', q:'125 ml/hr、20 滴/ml，每分鐘大約幾多滴？', o:['21','33','41','62'], a:2, e:'125 × 20 ÷ 60 ≈ 41 滴／分鐘。'},
+ {id:'n16', ch:'五', q:'IV 期間病人出現氣促、JVD、Rales，最可能係？', o:['空氣栓','循環系統負荷過重','液體外滲','導管感染'], a:1, e:'Circulatory overload：SOB、JVD、RR↑、BP↑、Rales；處理 TKVO、坐起腳放低、氧氣、通知醫院。'},
+ {id:'n17', ch:'五', q:'懷疑空氣栓 (Air embolism)，病人應擺咩姿勢？', o:['右側臥','左側臥（心臟較低）','半坐臥','俯臥'], a:1, e:'左側臥令心臟喺較低位置，或提升雙腿；俾氧氣。'},
+ {id:'n18', ch:'五', q:'皮下注射 (SC) 入針角度約係？', o:['15°','30°','45°','90°'], a:2, e:'SC：夾起皮膚，斜口向上約 45° 插入；IMI 則 90°。'},
+ {id:'n19', ch:'三', q:'吸吮性胸傷用保鮮紙封蓋時，應該？', o:['四邊封實','封三邊，缺口向上','封三邊，缺口向下','唔使封'], a:2, e:'封三邊，缺口向下，方便血液流出；保鮮紙要比傷口大 3–4 倍。'},
+ {id:'n20', ch:'三', q:'開放性腹部傷口有腸臟流出，應該？', o:['推返入腹腔','用 N/S 濕厚敷料蓋住，再用保鮮紙包紮','用乾敷料加壓','用冰包'], a:1, e:'唔可以推返；先 N/S 濕厚敷料，再保鮮紙，外加敷料。'},
+ {id:'n21', ch:'三', q:'異物刺入身體，一般應該？', o:['即刻拔出','用厚敷料固定，唔好直接加壓','用止血帶','旋轉拔出'], a:1, e:'一般唔好即時移除；除非阻塞氣道、妨礙呼吸或 CPR。'},
+ {id:'n22', ch:'三', q:'斷肢應該點處理？', o:['直接放冰','用 N/S 濕敷料蓋切口，放斷肢袋，再放入有 Cold pack 嘅袋','浸喺 N/S 入面','唔使帶去醫院'], a:1, e:'斷肢唔直接接觸冰；雙層袋，外層有 Cold pack，同病人一齊送院。'},
+ {id:'n23', ch:'六', q:'中暑 (Heat stroke) 嘅典型徵狀係？', o:['體溫 < 38℃、大汗','體溫 ≥ 40℃、皮膚乾熱少汗、昏睡','發冷、打冷震','皮膚濕冷'], a:1, e:'中暑：體溫 ≥ 40℃、昏睡或昏迷、皮膚乾熱、可能抽筋。'},
+ {id:'n24', ch:'六', q:'Hypothermia 嘅定義係核心體溫低於？', o:['36℃','35℃','34℃','32℃'], a:1, e:'核心體溫 < 35℃；院前以耳探 < 35℃ 為指標。'},
+ {id:'n25', ch:'六', q:'嚴重體溫過低病人查脈搏要用幾耐？', o:['10 秒','15 秒','30 秒','60 秒'], a:3, e:'血液循環好慢，要用 60 秒檢查脈搏。'},
+ {id:'n26', ch:'七', q:'以下邊樣「唔係」Narcotic？', o:['Codeine','Methadone','Ketamine','Morphine'], a:2, e:'Ketamine 唔屬 Narcotic，Naloxone 對單純 K 仔中毒冇效。'},
+ {id:'n27', ch:'七', q:'Ventolin 約幾耐生效？', o:['1 分鐘內','5–10 分鐘','15–30 分鐘','1 小時'], a:1, e:'Ventolin 5–10 分鐘生效，維持 3–4 小時；Atrovent 15–30 分鐘生效。'},
+ {id:'n28', ch:'七', q:'香港中毒諮詢中心 (HKPIC) 電話係？', o:['2772 2211','2255 3007','2817 0127','999'], a:0, e:'HKPIC：2772 2211。'},
+ {id:'n29', ch:'七', q:'TNG 生效同有效時間大約係？', o:['1 分鐘生效，約 30 分鐘','10 分鐘生效，約 2 小時','即時生效，約 5 分鐘','30 分鐘生效，約 4 小時'], a:0, e:'TNG 約 1 分鐘生效，有效約 30 分鐘。'},
+ {id:'n30', ch:'七', q:'Glucagon 注射後約幾耐生效？', o:['1 分鐘','10 分鐘','30 分鐘','1 小時'], a:1, e:'約 10 分鐘生效；長期飢餓、營養不良、酗酒者效果差。'},
+ {id:'n31', ch:'七', q:'抽搐病人處理嘅「3N」係？', o:['Position、Suction、Oxygen','Pulse、Saline、Oxygen','Position、Splint、OPA','Pupil、Sugar、Oxygen'], a:0, e:'Position 側臥、Suction 清理氣道、Oxygen 高濃度氧氣。'},
+ {id:'n32', ch:'八', q:'神經性休克 (Neurogenic shock) 主因係？', o:['大量失血','心肌梗塞','體內血管擴張','過敏'], a:2, e:'Neurogenic：血管擴張；Hypovolemic：失血；Cardiogenic：心臟；Anaphylactic：過敏。'},
+ {id:'n33', ch:'九', q:'CPR 中「小童」嘅年齡定義係？', o:['< 1 歲','≥ 1 歲至 < 8 歲','≥ 1 歲至 < 12 歲','< 18 歲'], a:1, e:'新生嬰兒：院前分娩；嬰兒：至 < 1 歲；小童：≥ 1 至 < 8 歲；成人：≥ 8 歲。'},
+ {id:'n34', ch:'九', q:'成人 CPR 按壓深度係？', o:['最少 3 cm','最少 4 cm','最少 5 cm','最多 4 cm'], a:2, e:'成人最少 5 cm；小童約 5 cm（胸厚 1/3）；嬰兒約 4 cm。'},
+ {id:'n35', ch:'九', q:'昏迷 FBAO 病人，幾時先可以插 OPA？', o:['即刻','異物被迫出之後','做完第一輪 CPR','灌氣受阻時'], a:1, e:'異物未迫出前唔好插 OPA；睇到異物用 Magill forceps 清除後先插。'},
+ {id:'n36', ch:'十', q:'LMA Supreme 固定後 Fixation tab 距離上唇 > 2.5 cm，代表？', o:['Size 可能太細','Size 可能太大','位置正確','Cuff 漏氣'], a:1, e:'約 1.5 cm 為合適；< 1 cm 可能太細，> 2.5 cm 可能太大。'}
+],
+
+// 模擬個案（分步決策）
+cases: [
+ {id:'c1', title:'低血糖：家中昏睡嘅糖尿長者', slug:'glycemia',
+  intro:'68 歲男，糖尿病，家人發現佢叫極都唔太應。非創傷。GCS 下降，生命表徵穩定，1st H\'stix 2.6 mmol/L。',
+  steps:[
+   {q:'應該行邊個 Protocol？', o:['Glycemia','Convulsion','Narcotic Overdose','Pre-hospital Stroke'], a:0, e:'非創傷、清醒程度下降，及血糖 ≦ 4 mmol/L → 符合 Glycemia 適用症；禁忌症只有 < 12 歲。'},
+   {q:'IV 已經開好，D10W 點俾？', o:['100 ml / hr','100 ml / FR，預先接駁 3-way','200 ml 口服','500 ml / FR'], a:1, e:'IV (1st H\'stix ≦ 4)：100 ml / FR (Full Rate)，預先接駁 3-way。'},
+   {q:'經 IV 俾 D10W 時仲要俾咩？', o:['Thiamine 50 mg / 0.5 ml，3-way 落藥','Glucagon 1 mg','Naloxone 0.4 mg','唔使俾其他藥'], a:0, e:'Thiamine 適用症：給予 D10W (IV) 時嘅預防，禁忌症係對 Thiamine 敏感。'},
+   {q:'開始 100 ml / FR 後 5 分鐘，2nd H\'stix 3.4。下一步？', o:['停止 D10W','再俾 100 ml / FR，完成後改 100 ml / hr','改用 NS','即刻打 Glucagon'], a:1, e:'2nd H\'stix ≦ 4：IV 100 ml / FR；完成 2nd 100 ml / FR 後改 100 ml / hr (兩秒一滴)。'},
+   {q:'如果一開始 IV 試咗 3 次都唔成功？', o:['放棄用藥即刻 Load & Go','考慮 Glucagon 1 mg / 1 ml IMI','俾 D10W 口服','俾 Thiamine 就夠'], a:1, e:'Glucagon 適用症包括血糖 ≦ 4 及 1/2/3 次 IV 嘗試失敗或無法 IV；劑量 1 mg / 1 ml。'},
+   {q:'上車問病歷用咩口訣？', o:['MIAMIA','SAMPLE','OPQRST','CHEAP PAIN'], a:0, e:'MIAMIA：Meal、Insulin、Activity、Medication、Illness、Alcohol。'}
+  ]},
+ {id:'c2', title:'心源性胸痛：服過壯陽藥', slug:'cardiac_chest_pain',
+  intro:'58 歲男，胸口翳痛 30 分鐘，OPQRST 懷疑心源性。有心臟病記錄，醫生處方 NTG。SBP 142，HR 88，GCS 15，RR 18。佢話琴晚食過一粒「威而鋼」。',
+  steps:[
+   {q:'ASA 應唔應該俾？', o:['應該，200 mg 一劑 (排除禁忌症後)','唔應該，因為食過壯陽藥','應該，300 mg','應該，可重複俾'], a:0, e:'懷疑心源性胸痛及 ≧ 12 歲；壯陽藥唔係 ASA 禁忌症。ASA 200 mg，Only One Dose。'},
+   {q:'NTG 應唔應該俾？', o:['應該，0.4 mg','唔應該 —— 72 小時內曾用治療性功能障礙藥物','應該，因為 SBP ≧ 100','只俾半劑'], a:1, e:'NTG 禁忌症：72 小時內曾服用／使用聲稱可增強、治療性功能障礙的藥物。'},
+   {q:'可唔可以做 12-Lead ECG？', o:['可以 —— ≧12 歲、心源性胸痛，冇禁忌症','唔可以，因為 GCS 15','唔可以，因為服過壯陽藥','只可以喺醫院做'], a:0, e:'禁忌症包括心臟驟停、氣道問題、GCS ≦ 13、SBP < 90 或回流 > 2 秒、RR < 10 或 > 29；呢個病人全部冇。'},
+   {q:'假設佢冇食壯陽藥，但 SBP 得 95，NTG 可唔可以俾？', o:['可以','唔可以 —— SBP < 100','可以但只俾 1 puff','要先俾 NS'], a:1, e:'NTG 要求收縮壓 ≧ 100 及心率 ≦ 150。'}
+  ]},
+ {id:'c3', title:'肢體骨折止痛', slug:'penthrox',
+  intro:'30 歲男 (70 kg) 行山跌倒，懷疑脛骨閉合性骨折，痛 9/10，完全清醒。SBP 128，無其他病歷。大量出血已制止。',
+  steps:[
+   {q:'第一線止痛用咩？', o:['Penthrox 3 ml','Tramadol 75 mg','Midazolam','Naloxone'], a:0, e:'Penthrox 適用：所有痛症及 ≧ 12 歲。Tramadol 要拒絕／不能用 Penthrox 或用後無效先考慮。'},
+   {q:'用完 Penthrox 冇止痛效果，改用 Tramadol，劑量係？', o:['50 mg / 1 ml','75 mg / 1.5 ml','100 mg / 2 ml','唔可以用'], a:1, e:'≧ 50 kg：75 mg / 1.5 ml IMI。'},
+   {q:'如果佢有癲癇病歷？', o:['照俾 Tramadol','Tramadol 禁忌 (CHEAP PAIN 嘅 E)','減半劑量','改俾第二劑 Penthrox'], a:1, e:'Tramadol 禁忌症 E：有癲癇或癲癇病歷記錄。Penthrox 亦只得一劑。'},
+   {q:'俾 Tramadol 會唔會阻延離開現場？', o:['可以喺現場俾，但唔應導致其他 Protocol 或離開現場不必要延誤','一定要上車先俾','一定要到院先俾','要等 Penthrox 用完 24 小時'], a:0, e:'Tramadol 亦可喺現場給予 (例如病人被困或用夾板前)，但不應導致不必要延誤。'}
+  ]},
+ {id:'c4', title:'Unstable Trauma：交通意外內出血', slug:'tranexamic_acid',
+  intro:'40 歲女，私家車相撞 1 小時前，腹部瘀傷，懷疑大量內出血。SBP 82，HR 128，GCS 14，RR 24。',
+  steps:[
+   {q:'NS 應該點俾？', o:['100 ml / hr','500 ml / FR','200 ml / hr','唔應該俾 NS'], a:1, e:'Hypovolemia：SBP < 90 (之前俾咗 0/1 次 500 ml / FR) → 500 ml / FR；FULL RATE 不超過 1000 ml。'},
+   {q:'佢符唔符合 TXA？', o:['符合：嚴重創傷懷疑大量出血、3 小時內、≧ 18 歲、SBP < 90','唔符合，因為 GCS 14','唔符合，要 SBP < 80','唔符合，要等到院'], a:0, e:'TXA 四項條件全部符合；禁忌症只有對 TXA 敏感。'},
+   {q:'TXA 點注射？', o:['1 g 一次過推','每分鐘 100 mg / 1 ml，10 分鐘內分 10 次','每 5 分鐘 500 mg','滴注 1 小時'], a:1, e:'每分鐘 100 mg / 1 ml，10 次；開始咗就唔理血壓都要完成 10 次。'},
+   {q:'佢好痛，可唔可以用 Penthrox？', o:['可以','唔可以 —— SBP < 90','可以但要減半','可以，配 Tramadol'], a:1, e:'Penthrox 禁忌症：SBP < 90 mmHg。Tramadol 亦有 Hypotension (SBP < 90) 禁忌。'},
+   {q:'應該送去邊？', o:['屬區醫院','創傷中心 (SBP < 90)','最就近醫院','任何醫院'], a:1, e:'創傷分流：SBP < 90 或毛細管回流 > 2 秒 → 到創傷中心。'}
+  ]},
+ {id:'c5', title:'全身性抽搐', slug:'convulsion',
+  intro:'25 歲女 (60 kg)，有人目擊佢全身性抽搐，到場時仍然抽緊、不醒人事。5 分鐘內冇用過任何停抽搐藥。',
+  steps:[
+   {q:'符唔符合 Convulsion Protocol？', o:['符合：被目擊全身性抽搐及不醒人事','唔符合，要抽搐超過 5 分鐘','唔符合，要先量血糖','唔符合，要 < 12 歲'], a:0, e:'適用症：被目擊全身性抽搐及不醒人事 (不用計算抽搐時間)。'},
+   {q:'用咩氧氣？', o:['Nasal Cannula 2 L','Non-rebreather Mask / BVM','Venturi 0.24','唔使俾氧'], a:1, e:'全身性抽搐係需要高濃度氧氣嘅危急病人：Non-rebreather Mask / BVM。'},
+   {q:'Midazolam 第 1 劑？', o:['7.5 mg / 1.5 ml','10 mg / 2 ml','5 mg / 1 ml','0.6 mg / 0.12 ml'], a:1, e:'≧ 12 歲、≧ 50 kg：1st 10 mg / 2 ml；IN 要多抽 0.1 ml，每邊鼻孔一半。'},
+   {q:'1st 劑後 5 分鐘仍然抽緊，下一步？', o:['2nd 劑 5 mg / 1 ml','再俾 10 mg','唔可以再俾','改用 Diazepam'], a:0, e:'1st 劑後 5 分鐘仍未停／再次抽搐 → 2nd 劑 5 mg / 1 ml。已俾共 2 劑就係禁忌。'},
+   {q:'停咗抽搐之後應該？', o:['檢查 H\'stix，按讀數行 Glycemia Protocol','即刻俾第 3 劑','做 12-Lead ECG','俾 Naloxone'], a:0, e:'病人停止抽搐後檢查 1st H\'stix，按讀數使用 Glycemia Protocol。'}
+  ]},
+ {id:'c6', title:'嚴重過敏反應', slug:'basic_anaphylaxis',
+  intro:'22 歲男，食咗花生，全身出風疹、嘴唇腫，有喘鳴聲，聽診確認下呼吸道阻塞。SBP 84。身上有自己一支 EpiPen。',
+  steps:[
+   {q:'符唔符合 Basic Anaphylaxis？', o:['符合 (A + B + C)','唔符合，要先有 SBP < 70','只符合 A','只符合 C'], a:0, e:'A Skin + B Airway Obstruction + C Hypotension (SBP < 90)。'},
+   {q:'EpiPen 劑量同注意？', o:['0.3 mg，注射後停留 10 秒先抽出','0.15 mg，即刻抽出','1 mg IV','0.5 mg，停留 3 秒'], a:0, e:'成人 0.3 mg；注射後停留 10 秒才抽出。用前確保病人冇對 Adrenaline 敏感。'},
+   {q:'第 2 支 EpiPen 要相隔幾耐？', o:['3 分鐘','5 分鐘','10 分鐘','唔可以用第 2 支'], a:1, e:'每支相隔 5 分鐘；先用病人自己嘅，處方提供嘅上限一支。'},
+   {q:'佢 4 小時內冇食過抗組織胺，Piriton 點俾？', o:['10 mg / 1 ml IMI','4 mg 口服','20 mg IV','唔使俾'], a:0, e:'Chlorpheniramine 10 mg / 1 ml；≧ 12 歲、無敏感、4 小時內冇用過抗組織胺。'},
+   {q:'針對下呼吸道阻塞俾咩？', o:['Ventolin 400 mcg / 4 puffs','Atrovent 40 mcg','NTG','Naloxone'], a:0, e:'有上／下呼吸道阻塞 (聽診確認) → Salbutamol (Ventolin)，≧ 12 歲 400 mcg / 4 puffs。'},
+   {q:'SBP 84，NS 點俾？送邊？', o:['500 ml / FR；送最就近醫院','100 ml / hr；送屬區醫院','唔使 NS；送創傷中心','500 ml / hr；送屬區醫院'], a:0, e:'SBP < 90 → 500 ml / FR。嚴重敏感嘅病人需要送往最就近醫院。'}
+  ]},
+ {id:'c7', title:'目擊心臟驟停', slug:'aed',
+  intro:'65 歲男喺商場倒地，無反應、無正常呼吸、無脈搏。年齡 ≧ 12 歲，無 DNACPR。',
+  steps:[
+   {q:'第一步？', o:['CPR + AED','先插 LMA','先打 Adrenaline','先做 12-Lead ECG'], a:0, e:'AED 適用：心搏停止的病人；禁忌只係新生嬰兒。'},
+   {q:'幾時插 LMA Supreme？', o:['喺 AED Protocol 空檔 (例如電擊後 2 分鐘 CPR 內)，≤ 30 秒完成','一到場即刻插','到醫院先插','要停 CPR 2 分鐘插'], a:0, e:'喺 AED Protocol 期間空檔使用；如現場需要電擊，要喺 2 分鐘 CPR 內用不多於 30 秒完成。'},
+   {q:'插好 LMA 之後點灌氣？', o:['30:2','每 6 秒灌氣一次，ACCM 改 cont.','每 3 秒一次','唔使灌氣'], a:1, e:'ACCM 30:2 改為 cont.；每 6 秒灌氣一次，不應為灌氣停頓心外壓。'},
+   {q:'Adrenaline 點俾？', o:['1 mg / 10 ml 每 3–5 分鐘，最多 5 次','1 mg / 1 ml 一次','0.5 mg 每 2 分鐘','無上限'], a:0, e:'Adrenaline 1 mg / 10 ml，每 3–5 分鐘，最多 5 次。'},
+   {q:'已電擊 3 次、打咗 1 劑 Adrenaline，仲係 shockable，下一步可考慮？', o:['Amiodarone 300 mg','Amiodarone 150 mg','TXA','Naloxone'], a:0, e:'Amiodarone 1st 300 mg；2nd 150 mg。條件：≧12、3 次電擊、≥1 劑 Adrenaline。'},
+   {q:'應該送去邊？', o:['最就近醫院','創傷中心','屬區醫院','病人指定醫院'], a:0, e:'心搏停止的病人需要送往最就近醫院。'}
+  ]},
+ {id:'c8', title:'懷疑中風', slug:'pre_hospital_stroke_assessment',
+  intro:'72 歲女，2 小時前突然右手右腳無力、講嘢唔清。平時自己行得。SBP 168，GCS 15。',
+  steps:[
+   {q:'符唔符合院前中風評估適用症？', o:['符合：突發單邊無力／語言障礙，4 小時內','唔符合，要 3 小時內','唔符合，因為 > 65 歲','唔符合，要 GCS < 15'], a:0, e:'突發性／單邊肢體無力或語言障礙，及病發或最後正常時間於 4 小時內。'},
+   {q:'通報前一定要排除咩？', o:['低血糖 (H\'stix > 4.0 mmol/L)','高血壓','心律不正','發燒'], a:0, e:'已排除血糖過低所引起嘅症狀 (H\'stix > 4.0)，應先處理血糖過低才進行中風評估。'},
+   {q:'H\'stix 6.1。佢符唔符合通報條件？', o:['符合 (≧18、非長期臥床、SBP > 100 及 GCS ≥ 8、已排除低血糖)','唔符合，因為 SBP > 160','唔符合，因為 72 歲','唔符合，要 FAST-ED ≧ 4'], a:0, e:'全部通報條件符合 → 請直接致電院前中風通報電話，強調係院前中風通報。'},
+   {q:'如果佢係長期輪椅使用者？', o:['照樣通報','唔符合通報條件，如常送院','送創傷中心','唔使送院'], a:1, e:'通報條件之一係「並非長期臥床或輪椅使用者」；不符合就如常把病人送院。'}
+  ]},
+ {id:'c9', title:'懷疑海洛英過量', slug:'narcotic_overdose',
+  intro:'30 歲男喺後巷被發現，身邊有針筒。清醒程度下降，RR 4，瞳孔細，需要 BVM 輔助灌氣。',
+  steps:[
+   {q:'行邊個 Protocol？', o:['Narcotic Overdose','Glycemia','Activated Charcoal','Convulsion'], a:0, e:'有證據顯示麻醉劑過量、清醒程度下降及需要 BVM Bagging。'},
+   {q:'Naloxone 劑量？', o:['0.4 mg / 1 ml','2 mg / 2 ml','0.1 mg / 1 ml','4 mg IN'], a:0, e:'Naloxone 0.4 mg / 1 ml。'},
+   {q:'佢有 IMI 禁忌症 (例如服抗凝血藥)，仲打唔打？', o:['要打，注射後施針位置加壓並通知醫護','唔打','改 SC','改口服'], a:0, e:'有 IMI 禁忌症都需要注射 Naloxone，注射後直接加壓止血及通知醫護人員。'},
+   {q:'可唔可以俾 Activated Charcoal？', o:['唔可以 —— 清醒程度下降、氣道不暢','可以 50 g','可以，要 HKPIC 批准','可以，2 小時內就得'], a:0, e:'活性炭禁忌症包括清醒程度下降、不能自行飲用、氣道不暢通等。'}
+  ]},
+ {id:'c10', title:'疑似興奮性譫妄', slug:'olanzapine',
+  intro:'35 歲男喺街上情緒激動、具侵略性、思緒混亂唔聽勸，有傷人傾向，一般方法控制唔到。SBP 138，無青光眼病歷。',
+  steps:[
+   {q:'符唔符合 Suspected Excited Delirium Syndrome？', o:['符合','唔符合，要有自殘先算','唔符合，要 SBP < 90','唔符合，要 > 65 歲'], a:0, e:'情緒激動具侵略性 及 思緒混亂不接納勸告 及 有傷害自己或他人傾向，及未能以一般方法控制。'},
+   {q:'Olanzapine 點準備？', o:['抽 2.1 ml 注射用水混合，再抽 10 mg / 2 ml','直接抽 5 mg','抽 2 ml NS 混合','抽 1 ml 注射用水'], a:0, e:'先抽 2.1 ml 注射用水入藥瓶，混合後抽出 10 mg / 2 ml。'},
+   {q:'注射位置？', o:['股外肌 (大腿前外側中 1/3)','三角肌','臀部','腹部'], a:0, e:'Olanzapine IMI 注射位置：股外肌。'},
+   {q:'如果病人 70 歲？', o:['照樣俾','禁忌 (> 65 歲)','減半','改 IN'], a:1, e:'Olanzapine 禁忌症：年齡 < 12 歲或 > 65 歲。'}
+  ]}
+],
+
+// 口訣卡
+mnemonics: [
+ {slug:'tramadol', head:'Tramadol 禁忌症 — CHEAP PAIN', body:'C Anti-Cough Mixture：兩星期內服過含止咳混合劑\nH Hypotension：收縮壓 < 90 mmHg\nE Epilepsy：癲癇或癲癇病歷\nA Age：< 18 歲\nP Psychiatric：兩星期內需服精神科藥物 (包括安眠藥)\nP Pregnant：懷孕或母乳餵哺\nA Drug Abuse：濫藥或吸毒\nI Intoxication with Alcohol：急性酒精中毒\nN Narcotics Hypersensitivity：對麻醉劑 / Tramadol 敏感'},
+ {slug:'cardiac_chest_pain', head:'ASA 禁忌症 — 原文英文字頭 S·A·P·H·B·U·S', body:'S Swallow：無法吞嚥\nA Age：< 12 歲\nP Pregnant：懷孕\nH Hypersensitivity：對 ASA / NSAIDs 過敏\nB Bleeding：不能控制嘅內／外出血\nU Used：24 小時內已因今次不適服用 ASA\nS Surgery：一星期內做過手術\n＊另外：裝有 LVAD 不能使用 ASA'},
+ {slug:'glycemia', head:'血糖病人問病歷 — MIAMIA', body:'M Meal：最後進食時間、份量\nI Insulin：有冇打胰島素、時間、劑量\nA Activity：發生前做過咩運動\nM Medication：有冇服影響血糖嘅藥\nI Illness：有冇感染或炎症\nA Alcohol：有冇酗酒'}
+]
+};
